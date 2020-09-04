@@ -19,14 +19,16 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity(name = "Message")
 @Table(name = "message")
-@Document(indexName = "messagesall", type = Message.TYPE_NAME, shards = 1, replicas = 0)
+@Document(indexName = Message.INDEX_NAME, type = Message.TYPE_NAME, shards = 1, replicas = 0)
 public class Message implements Serializable{
 	
 	/**
@@ -35,11 +37,11 @@ public class Message implements Serializable{
 	
 	
 	
-//	public static final String INDEX_NAME = "messagesall";
+	public static final String INDEX_NAME = "messagesall1";
 	public static final String TYPE_NAME = "message";
 	
 	public static final String DATE_PATTERN = "yyyy-MM-dd";
-	public static final String analyzer = "{\"tokenizer\" : \"standard\",\"filter\" : [\"lowercase\"]}";
+//	public static final String analyzer = "{\"tokenizer\" : \"standard\",\"filter\" : [\"lowercase\"]}";
 	private static final long serialVersionUID = 1L;
 	
 
@@ -53,6 +55,7 @@ public class Message implements Serializable{
 			CascadeType.PERSIST,
 			CascadeType.MERGE
 	})
+	@JsonIgnore
 	@JoinTable(name = "message_tag", 
 			   joinColumns = @JoinColumn(name = "message_id"),
 			   inverseJoinColumns = @JoinColumn(name = "tag_id")		
@@ -62,6 +65,7 @@ public class Message implements Serializable{
 	
 	
 	@OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
 	private Set<Attachment> attachments = new HashSet<>();
 	
 
@@ -71,12 +75,14 @@ public class Message implements Serializable{
 	
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	@JoinColumn(name = "account_id")
 	@Field(type = FieldType.Keyword, store = false)
 	private Account account;
 	
 	
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	@JoinColumn(name = "folder_id")
 	private Folder folder;
 	
@@ -306,6 +312,7 @@ public class Message implements Serializable{
 		return "Message [id=" + id + ", tags=" + tags + ", from=" + from + ", to=" + to + ", cc=" + cc + ", bcc=" + bcc
 				+ ", dateTime=" + dateTime + "]";
 	}
-	
+
+
 	
 }

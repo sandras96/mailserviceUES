@@ -30,6 +30,7 @@ public class Account implements Serializable {
 	
 	
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
 	private List<Message> messages;
 	
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)

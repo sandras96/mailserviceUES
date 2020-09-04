@@ -65,7 +65,9 @@ public class SearchController {
 	@Autowired
 	private MessageRepository messageRepository;
 
-
+	@Autowired
+	private AccountRepository accountRepository;
+	
 	@Autowired
 	private GeneralSearchService generalSearchService;
 
@@ -357,13 +359,14 @@ public class SearchController {
 //-------------------------PORUKE---------------------------------------------
 
 	@GetMapping(value = "/search-messages/{id}")
-	public Iterable<Message> searchMessages(@RequestParam(required = false) String query, @PathVariable("id") Long id) {
+	public List<Message> searchMessages(@RequestParam(required = false) String query, @PathVariable("id") Long id) {
+		System.out.println("AAAAAAAAAAAAAAAAAAAAA");
 		if (query == null || query.equals("")) {
-			List<Message> messages = messageRepository.findMessagesByAccountId(id);
-			messageRepo.saveAll(messages);
+			return messageRepository.findMessagesByAccountId(id);
+				
 		}
-		return messageRepo.findAll();
-//		return generalSearchService.searchMessages(query);
+//		return messageRepo.findAll();
+		return generalSearchService.searchMessages(query);
 		
 		}
 	
@@ -374,7 +377,8 @@ public class SearchController {
 	  
 		  List<Message> messages = messageRepository.findMessagesByAccountId(id);
 		  System.out.println("Messages lista jeee" + messages); 
-		  for(Message m : messageRepository.findMessagesByAccountId(id)) { 
+		  for(Message m : messageRepository.findMessagesByAccountId(id)) {
+			
 			  messageRepo.save(m);
 		  	} 
 		  
@@ -382,9 +386,9 @@ public class SearchController {
 		  List<Message> messages1 = messageRepo.findBySubject(CyirilLatinConverter.cir2lat(subject));
 	  
 		  for(Message m: messages1) { 
+			  	m.setAccount(accountRepository.getOne(id));
 			  	MessageDTO messageDTO = new MessageDTO(m);
-		  		if(messageDTO.getAccount().getId() == id) {
-		  			messagesDTO.add(messageDTO); }
+			  	messagesDTO.add(messageDTO);
 		  			} 
 		  		return messagesDTO;
 	 }

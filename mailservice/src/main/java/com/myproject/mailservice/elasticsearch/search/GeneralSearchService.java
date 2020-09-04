@@ -49,8 +49,11 @@ public class GeneralSearchService {
     }
     
 	
-	  public List<Message> searchMessages(String query) { return
-	  elasticsearchTemplate.queryForList( messageQuery(query), Message.class );
+	  public List<Message> searchMessages(String query) {
+		  return  elasticsearchTemplate.queryForList(
+				  messageQuery(query),
+				  Message.class
+		  );
 	  }
 	  
 	  public NativeSearchQuery messageQuery(String query) { MultiMatchQueryBuilder

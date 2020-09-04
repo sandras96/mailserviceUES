@@ -7,6 +7,8 @@ import javax.persistence.*;
 import org.hibernate.annotations.Type;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity(name = "Attachment")
@@ -37,7 +39,9 @@ public class Attachment {
 	
 	
 	@ManyToOne(fetch = FetchType.LAZY)
+	
 	@JoinColumn(name = "message_id")
+	@JsonIgnore
 	private Message message;
 	
 

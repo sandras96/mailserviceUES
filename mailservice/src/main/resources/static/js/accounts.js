@@ -61,17 +61,17 @@ function getAccounts(accounts){
 		 $("<option>").val(accounts[i].id).text(accounts[i].displayName).appendTo($select);
 		
 	}
-
 	$select.change(function(){
 		
 		var accountId = $('#selAccounts').find(":selected").val();
 		
 			$.ajax({
 				type: 'get',
-				url: "http://localhost:8080/mailservice/messages/account/" + accountId,
-		
+				url: "http://localhost:8080/elasticsearch/search-messages/" + accountId,
 				cache: false,
+				contentType: 'application/json',
 				success: function(response){
+					console.log("MOLIMMM")
 					$('.inbox_chat').empty();
 					$('.incoming_msg').empty();
 					initMessages(response);
@@ -84,7 +84,7 @@ function getAccounts(accounts){
 					}
 				});
 	})
-};
+}
 function initMessages(messages){
 	for (var i = 0; i < messages.length; i++) {
 		appendMessage(messages[i]);
@@ -138,7 +138,7 @@ function searchica(){
 	console.log("srcicaaa")
 	searchFunction();
 }
-function buttonsss(){
+/*function buttonsss(){
 	console.log("whaaat")
 	var accountId = $('#selAccounts').find(":selected").val();
 	console.log(accountId)
@@ -155,7 +155,7 @@ function buttonsss(){
 						}
 					}
 				});
-	}
+	}*/
 
 
 function searchFunction(){
@@ -185,6 +185,8 @@ function searchFunction(){
 }
 
 function search1(){
+	$(".inbox_chat").empty();
+	$(".incoming_msg").empty();
 	console.log("search");
 	var field = $('#tipField').find(":selected").val();
 	var value=$("#value").val().trim();
@@ -194,14 +196,14 @@ function search1(){
 			"id" : currentUserId,
 			"firstName" : value,
 	}
-
 	
 	$.ajax({
 		type: 'get',
-		url: "http://localhost:8080/elasticsearch/search-messages/"/* + accountId + "/" + value*/,
+		url: "http://localhost:8080/elasticsearch/search/searchBySubject/" + accountId + "/" + value,
 		cache: false,
 		contentType: 'application/json',
 		success: function(response){
+			initMessages(response);
 			console.log(response)
 					},
 					error: function (jqXHR, textStatus, errorThrown) {  

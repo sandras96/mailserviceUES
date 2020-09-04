@@ -42,23 +42,6 @@ public class Photo {
 	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	public Photo(Long id, String path, String type, byte[] pic, Contact contact) {
 		super();
 		this.id = id;
@@ -67,7 +50,6 @@ public class Photo {
 		this.pic = pic;
 		this.contact = contact;
 	}
-
 
 
 	public Photo(String name, String type, byte[] pic, Contact contact) {
@@ -81,62 +63,14 @@ public class Photo {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	public String getName() {
 		return name;
 	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	public Long getId() {
