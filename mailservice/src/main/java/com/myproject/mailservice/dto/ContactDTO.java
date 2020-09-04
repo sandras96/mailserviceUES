@@ -4,9 +4,10 @@ package com.myproject.mailservice.dto;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import org.springframework.data.elasticsearch.annotations.Document;
+
 import com.myproject.mailservice.entity.Contact;
 import com.myproject.mailservice.entity.User;
-
 
 
 

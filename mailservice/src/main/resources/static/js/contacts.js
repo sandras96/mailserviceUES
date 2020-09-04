@@ -1,10 +1,12 @@
 var currentUserId = "";
 var loggedInUsername = "";
+var currentUserType = "";
 
 $(document).ready(function() {
 	currentUserId = sessionStorage.getItem("id");
 	loggedInUsername = sessionStorage.getItem("username");
 	console.log("currentUserId je " + currentUserId);
+	currentUserType = sessionStorage.getItem("currentUserType");
 	loadContacts(currentUserId);
 });
 

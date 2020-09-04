@@ -62,7 +62,21 @@
           <div class="headind_srch">
             <div class="recent_heading">
               <h4>Primary <span></span></h4>
-              <div class="dropdown" id="sortMessagesDiv">
+              <ul><!-- 
+ 			 		<li>
+                        <select id="tipField" onChange="searchFunction()">
+                        	<option value="SUBJECT" selected>subject</option>
+                        	<option value="FROM AND TO">fromAndTo</option>
+                        	<option value="CONTENT">content</option>
+                        	
+                        	
+                        </select>
+                        	<div class="srch_bar">
+                        <input type="text" class="search-bar" placeholder="Insert the value" id="value"></input></div>
+                        <button class="glyphicon glyphicon-search" id="searchId"  onclick="searchica()"></button>
+                    </li>
+                     -->
+             <!--  <li>
 			 <select id="sortByMessages" onChange="sortMessages()">
 			 	<option selected hidden="true" >Sort by</option>
 				<option value="SUBJECT">Subject</option>
@@ -70,23 +84,39 @@
 				<option value="DATETIME">DateTime</option>
 				
 			</select>
+			</li>
+			</ul> -->
 			<!-- <select id="tagFilter">
 			 	<option selected hidden="true" >Tag filter</option>
 				<option value="VALUE1">v1</option>
 				<option value="VALUE2">v2</option>
 				<option value="VALUE3">v3</option>
 			</select> -->
-		</div>
+		
 		<div class="dropdown" id="filterTagDiv">
 			 
 		</div>
             </div>
-            <div class="srch_bar">
+            <div class="row">
+            <select id="tipField" onChange="searchFunction()">
+                        	<option value="SUBJECT" selected>subject</option>
+                        	<option value="FROM AND TO">fromAndTo</option>
+                        	<option value="CONTENT">content</option>
+                        	
+                        	
+                        </select>
+                        	<div class="srch_bar">
+                        <input type="text" class="search-bar" placeholder="Insert the value" id="value"></input></div>
+                        <button class="glyphicon glyphicon-search" id="searchId"  onclick="searchica()"></button>
+            
+            
+            </div>
+           <!--  <div class="srch_bar">
               <div class="stylish-input-group">
                 <input type="text" class="search-bar"  placeholder="Search" >
                 <button type="button"> <i class="glyphicon glyphicon-search" aria-hidden="true"></i> </button>
                 </div>
-            </div>
+            </div> -->
           </div>
           <div class="inbox_chat">
           <!-- <div class="chat_list active_chat">

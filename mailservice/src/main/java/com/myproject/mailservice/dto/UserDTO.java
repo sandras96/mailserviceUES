@@ -4,10 +4,10 @@ package com.myproject.mailservice.dto;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import com.myproject.mailservice.entity.Account;
 import com.myproject.mailservice.entity.User;
+import com.myproject.mailservice.entity.User.UserType;
 
 
 public class UserDTO implements Serializable {
@@ -23,21 +23,22 @@ public class UserDTO implements Serializable {
 	private String firstname;
 	private String lastname;
 	private List<AccountDTO> accounts;
+	private UserType userType;
 	
 	
 	
-	public UserDTO(Long id, String username, String password, String firstname, String lastname) {
+	public UserDTO(Long id, String username, String password, String firstname, String lastname,UserType userType) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.firstname = firstname;
 		this.lastname = lastname;
-		this.accounts = accounts;
+		this.userType = userType;
 	}
 
 	public UserDTO(User user) {
-		this(user.getId(), user.getUsername(),user.getPassword(),user.getFirstname(), user.getLastname());
+		this(user.getId(), user.getUsername(),user.getPassword(),user.getFirstname(), user.getLastname(), user.getUserType());
 	}
 	
 	public static List<AccountDTO> getAccoutnForUser(List<Account> acc){
@@ -124,6 +125,14 @@ public class UserDTO implements Serializable {
 
 	public void setAccounts(List<AccountDTO> accounts) {
 		this.accounts = accounts;
+	}
+
+	public UserType getUserType() {
+		return userType;
+	}
+
+	public void setUserType(UserType userType) {
+		this.userType = userType;
 	}
 
 

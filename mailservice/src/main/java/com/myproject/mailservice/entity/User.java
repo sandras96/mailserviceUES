@@ -29,6 +29,7 @@ public class User implements Serializable/* , UserDetails */{
 	 */
 	private static final long serialVersionUID = 1L;
 
+	public enum UserType {ADMIN, USER}
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id", nullable = false, unique = true)
@@ -64,9 +65,14 @@ public class User implements Serializable/* , UserDetails */{
 	private String lastname;
 	
 	
+	@Enumerated(EnumType.STRING)
+	@Column(name="user_type", unique=false, nullable=false)
+	private UserType userType;
 	
 	
-	
+
+
+
 
 	public User() {
 		super();
@@ -254,6 +260,15 @@ public class User implements Serializable/* , UserDetails */{
 
 
 
+	public UserType getUserType() {
+		return userType;
+	}
+
+
+
+	public void setUserType(UserType userType) {
+		this.userType = userType;
+	}
 
 
 

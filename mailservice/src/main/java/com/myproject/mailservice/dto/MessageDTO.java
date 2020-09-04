@@ -6,11 +6,13 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.elasticsearch.annotations.Document;
+
+import com.myproject.mailservice.entity.Contact;
 import com.myproject.mailservice.entity.Message;
 import com.myproject.mailservice.entity.Tag;
 
-
-//@Document(indexName = "messagesdto")
+@Document(indexName = "messagesDto")
 public class MessageDTO implements Serializable {
 
 	/**

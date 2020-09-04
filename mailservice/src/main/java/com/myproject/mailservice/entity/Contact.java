@@ -8,10 +8,9 @@ import java.util.Set;
 import javax.persistence.*;
 
 import org.hibernate.annotations.Type;
-/*import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;*/
-
+import org.springframework.data.elasticsearch.annotations.FieldType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -19,15 +18,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity(name = "Contact")
 @Table(name = "contact")
-//@Document(indexName = Contact.INDEX_NAME, type = Contact.TYPE_NAME, shards = 1, replicas = 0)
+@Document(indexName = Contact.INDEX_NAME, type = Contact.TYPE_NAME, shards = 1, replicas = 0)
 public class Contact implements Serializable {
 
 	
-	public static final String INDEX_NAME = "contacts";
+	public static final String INDEX_NAME = "contactsadmin1";
 	public static final String TYPE_NAME = "contact";
 	
 	public static final String DATE_PATTERN = "yyyy-MM-dd";
-	public static final String analyzer = "{\"tokenizer\" : \"standard\",\"filter\" : [\"lowercase\"]}";
+//	public static final String analyzer = "{\"tokenizer\" : \"standard\",\"filter\" : [\"lowercase\"]}";
 	/**
 	 * 
 	 */
@@ -37,29 +36,29 @@ public class Contact implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "contact_id", unique = true, nullable = false)
-//	@Field(type = FieldType.Long, store = false )
+	@Field(type = FieldType.Long, store = false )
 	private Long id;
 	
 	
-//	@Field(type = FieldType.Keyword,  store = true, analyzer=analyzer )
+	@Field(type = FieldType.Keyword,  store = true)
 	@Column(name = "contact_firstname", length = 100)
 	private String firstname;
 	
 	
-//	@Field(type = FieldType.Keyword, store = true, analyzer=analyzer )
+	@Field(type = FieldType.Keyword, store = true)
 	@Column(name = "contact_lastname", length = 100)
 	private String lastname;
 	
 	@Column(name = "contact_displayName", length = 100, nullable = false)
-//	@Field(type = FieldType.Keyword,  store = true, analyzer=analyzer )
+	@Field(type = FieldType.Keyword,  store = true)
 	private String displayName;
 	
-//	@Field(type = FieldType.Keyword,  store = true, analyzer=analyzer )
+	@Field(type = FieldType.Keyword,  store = true)
 	@Column(name = "contact_email", length = 100, nullable = false)
 	private String email;
 	
-	@Type(type = "text")
-//	@Field(type = FieldType.Keyword, store = true, analyzer=analyzer )
+	@Column(name = "contact_note", length = 100, nullable = false)
+	@Field(type = FieldType.Keyword,  store = true)
 	private String text;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

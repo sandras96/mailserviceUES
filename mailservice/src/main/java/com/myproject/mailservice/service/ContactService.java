@@ -19,9 +19,6 @@ public class ContactService implements ContactInterface {
 	@Autowired
 	ContactRepository contactRepository;
 	
-	/*
-	 * @Autowired DTOtoContact toCont;
-	 */
 	
 	@Override
 	public List<Contact> getAll(){
@@ -35,10 +32,7 @@ public class ContactService implements ContactInterface {
 	}
 	
 	
-	@Override
-	public Contact getByFirstName(String firstname) {
-		return contactRepository.findByfirstname(firstname);
-	}
+	
 
 
 	@Override
@@ -48,13 +42,6 @@ public class ContactService implements ContactInterface {
 			contactRepository.deleteById(id);
 		}
 	}
-	
-	
-	/*
-	 * @Override public Contact edit(ContactDTO contact, Long id) {
-	 * contact.setId(id); Contact editedContact = toCont.convert(contact);
-	 * contactRepository.save(editedContact); return editedContact; }
-	 */
 
 	@Override
 	public Contact getOne(Long contactId) {
@@ -74,11 +61,14 @@ public class ContactService implements ContactInterface {
 	public List<Contact> findContactsByEuserId(Long id) {
 		return contactRepository.findContactsByEuserId(id);
 	}
+
+
+	@Override
+	public List<Contact> findBynote(String parameter) {
+		// TODO Auto-generated method stub
+		return contactRepository.findBynote(parameter);
+	}
 	
-	/*
-	 * @Override public Page<Contact> getAllPaged(Pageable pageRequest) { return
-	 * contactRepository.findAll(pageRequest); }
-	 */
 
 	
 	

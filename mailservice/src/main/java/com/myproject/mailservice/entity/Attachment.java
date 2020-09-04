@@ -5,12 +5,14 @@ package com.myproject.mailservice.entity;
 import javax.persistence.*;
 
 import org.hibernate.annotations.Type;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity(name = "Attachment")
 @Table(name = "attachment")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
+@Document(indexName = "attachments")
 public class Attachment {
 	
 	

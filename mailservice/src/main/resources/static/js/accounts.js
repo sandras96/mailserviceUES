@@ -1,8 +1,11 @@
 var currentUserId = "";
+var loggedInUsername = "";
+var currentUserType = "";
 
 $(document).ready(function(){
 	currentUserId = sessionStorage.getItem("id");
 	loggedInUsername = sessionStorage.getItem("username");
+	currentUserType = sessionStorage.getItem("currentUserType");
 	console.log("currentUserId je " + currentUserId);
 	loadAccounts(currentUserId);
 	
@@ -130,6 +133,122 @@ function appendMessage(message){
 		}
 	);
 }
+
+function searchica(){
+	console.log("srcicaaa")
+	searchFunction();
+}
+function buttonsss(){
+	console.log("whaaat")
+	var accountId = $('#selAccounts').find(":selected").val();
+	console.log(accountId)
+	$.ajax({
+		type: 'get',
+		url: "http://localhost:8080/elasticsearch/search-messages/",
+		cache: false,
+		success: function(response){
+			console.log(response)
+					},
+					error: function (jqXHR, textStatus, errorThrown) {  
+						if(jqXHR.status=="404"){
+							alert(textStatus, errorThrown);
+						}
+					}
+				});
+	}
+
+
+function searchFunction(){
+	console.log("ON CHANGE SELECT")
+	 var typeField = $("#tipField").val();
+	 var value =$("#value").val().toLowerCase();
+	 if(typeField == "SUBJECT"){
+		 if(value==""){
+			//getAllmessagesByAccountId()
+		 }else{
+			 search1();
+		 }
+	 }else if(typeField == "LASTNAME"){
+		 if(value == ""){
+			 searchAll();
+		 }else{
+			 search(value);
+		 }
+	 }else if(typeField == "NOTE"){
+		 if(value == ""){
+			 searchAll();
+		 }else{
+			 search("searchByNote/" + value)
+		 }
+	 }
+
+}
+
+function search1(){
+	console.log("search");
+	var field = $('#tipField').find(":selected").val();
+	var value=$("#value").val().trim();
+	var accountId = $('#selAccounts').find(":selected").val();
+	console.log("Pretraga :" + field + value + accountId);
+	var data = {
+			"id" : currentUserId,
+			"firstName" : value,
+	}
+
+	
+	$.ajax({
+		type: 'get',
+		url: "http://localhost:8080/elasticsearch/search-messages/"/* + accountId + "/" + value*/,
+		cache: false,
+		contentType: 'application/json',
+		success: function(response){
+			console.log(response)
+					},
+					error: function (jqXHR, textStatus, errorThrown) {  
+						if(jqXHR.status=="404"){
+							alert(textStatus, errorThrown);
+						}
+					}
+				});
+	}
+
+function sortMessages(){
+	var sortBy = $('#sortByMessages').val();
+	console.log("SORTBY JE"+ sortBy)
+	if(sortBy == "SUBJECT"){
+			getMessagesSortBy("orderbysubject");
+		}else if(sortBy == "SENDER"){
+			getMessagesSortBy("orderbysender")
+		}else if(sortBy == "DATETIME"){
+			getMessagesSortBy("orderbydatetime");
+			
+		}
+}
+function getMessagesSortBy(sortby){
+	var accountId = $('#selAccounts').find(":selected").val();
+	
+	console.log("account id je " + accountId)
+	$.ajax({
+		type: 'get',
+		url: "http://localhost:8080/mailservice/messages/account/" + sortby +"/"+ accountId,
+
+		cache: false,
+		success: function(response){
+			$('.inbox_chat').empty();
+			$('.incoming_msg').empty();
+			initMessages(response);
+		},
+			
+			error: function (jqXHR, textStatus, errorThrown) {  
+				if(jqXHR.status=="404"){
+					alert(textStatus, errorThrown);
+				}
+			}
+		});
+	
+}
+
+
 
 function addAccount(){
 	var smtpAddress = $('#addsmtpAddress').val();
@@ -280,38 +399,3 @@ function deleteMessage(deleteId){
     });
 }
 
-function sortMessages(){
-	var sortBy = $('#sortByMessages').val();
-	console.log("SORTBY JE"+ sortBy)
-	if(sortBy == "SUBJECT"){
-			getMessagesSortBy("orderbysubject");
-		}else if(sortBy == "SENDER"){
-			getMessagesSortBy("orderbysender")
-		}else if(sortBy == "DATETIME"){
-			getMessagesSortBy("orderbydatetime");
-			
-		}
-}
-function getMessagesSortBy(sortby){
-	var accountId = $('#selAccounts').find(":selected").val();
-	
-	console.log("account id je " + accountId)
-	$.ajax({
-		type: 'get',
-		url: "http://localhost:8080/mailservice/messages/account/" + sortby +"/"+ accountId,
-
-		cache: false,
-		success: function(response){
-			$('.inbox_chat').empty();
-			$('.incoming_msg').empty();
-			initMessages(response);
-		},
-			
-			error: function (jqXHR, textStatus, errorThrown) {  
-				if(jqXHR.status=="404"){
-					alert(textStatus, errorThrown);
-				}
-			}
-		});
-	
-}

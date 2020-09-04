@@ -1,5 +1,6 @@
 var currentUserId = "";
 var loggedInUsername = "";
+var currentUserType = "";
 
 
 $(document).ready(function(){
@@ -12,6 +13,7 @@ $(document).ready(function(){
 	$("#contactsButton").hide();
 	$("#accountsButton").hide();
 	$("#mailsButton").hide();
+	$('#contactsAllButton').hide();
 	
 	loginStatus();
 	
@@ -20,8 +22,10 @@ $(document).ready(function(){
 function loginStatus(){
 	currentUserId = sessionStorage.getItem("id");
 	loggedInUsername = sessionStorage.getItem("username");
+	currentUserType = sessionStorage.getItem("usertype");
 	console.log("currentUserId: "+currentUserId);
-	console.log("usrname" + loggedInUsername);
+	console.log("usrname: " + loggedInUsername);
+	console.log("currentUserType: " + currentUserType);
 	if(currentUserId!= "null"){
 //	loadAccounts(currentUserId);
 //	loadContacts(currentUserId);
@@ -32,7 +36,9 @@ function loginStatus(){
 	$("#mailsButton").show();
 	$('#loginButton').hide();
 	$('#registerButton').hide();
-	
+	if(currentUserType == "ADMIN"){
+		$('#contactsAllButton').show();
+	}
 	
 	}
 	}
@@ -58,9 +64,11 @@ function login(){
 		
 		cache: false,
 		success: function(response){
+			console.log(response)
 			if (typeof(Storage) !== "undefined") {
         	    sessionStorage.setItem("id", response.id);
         		sessionStorage.setItem("username", response.username);
+        		sessionStorage.setItem("usertype", response.userType);
         	} else {
         	    alert("Sorry, your browser doesn't support Web Storage...");
         	}
