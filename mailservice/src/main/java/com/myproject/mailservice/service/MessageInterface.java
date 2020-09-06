@@ -3,6 +3,7 @@ package com.myproject.mailservice.service;
 import java.util.List;
 
 import com.myproject.mailservice.dto.MessageDTO;
+import com.myproject.mailservice.entity.Contact;
 import com.myproject.mailservice.entity.Message;
 
 public interface MessageInterface {
@@ -15,4 +16,5 @@ public interface MessageInterface {
 	List<Message> findBySubject(Long id);
 	List<Message> findBySender(Long id);
 	List<Message> findByDatetime(Long id);
+	List<Message> findByContent(String parameter, Long id);
 }
