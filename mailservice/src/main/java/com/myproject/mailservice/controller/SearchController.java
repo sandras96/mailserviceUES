@@ -392,5 +392,48 @@ public class SearchController {
 		  			} 
 		  		return messagesDTO;
 	 }
-
+		
+/*	 @GetMapping(value = "/search/searchBySender/{id}/{sender}") 
+	  public Iterable<MessageDTO> searchBySender(@PathVariable("id") Long id, @PathVariable("sender") String sender) throws Exception {
+		  System.out.println("MAILS serach by SENDER ---------------" + sender + "id: " + id);
+	  
+		  List<Message> messages = messageRepository.findMessagesByAccountId(id);
+		  System.out.println("Messages lista jeee" + messages); 
+		  for(Message m : messageRepository.findMessagesByAccountId(id)) {
+			
+			  messageRepo.save(m);
+		  	} 
+		  
+		  List<MessageDTO> messagesDTO = new ArrayList<MessageDTO>();
+		  List<Message> messages1 = messageRepo.findBySender(CyirilLatinConverter.cir2lat(sender));
+	  
+		  for(Message m: messages1) { 
+			  	m.setAccount(accountRepository.getOne(id));
+			  	MessageDTO messageDTO = new MessageDTO(m);
+			  	messagesDTO.add(messageDTO);
+		  			} 
+		  		return messagesDTO;
+	 }*/
+	 @GetMapping(value="/search/searchBySender/{id}/{from}")
+	   public Iterable<MessageDTO> searchByFromAndTo(@PathVariable("id") Long id, @PathVariable("from") String from) throws Exception {
+		  System.out.println("MAILS serach by SENDER ---------------" + from + "id: " + id);
+		  
+		  List<Message> messages = messageRepository.findMessagesByAccountId(id);
+		  System.out.println("Messages lista jeee" + messages); 
+		  for(Message m : messageRepository.findMessagesByAccountId(id)) {
+			
+			  messageRepo.save(m);
+		  	} 
+		  List<MessageDTO> messagesDTO = new ArrayList<MessageDTO>();
+		  List<Message> messages1 = messageRepo.findByFrom(CyirilLatinConverter.cir2lat(from));
+	  
+		  for(Message m: messages1) { 
+			  	m.setAccount(accountRepository.getOne(id));
+			  	MessageDTO messageDTO = new MessageDTO(m);
+			  	messagesDTO.add(messageDTO);
+		  			} 
+		  		return messagesDTO;
+	   }
+	 
+	 
 		}

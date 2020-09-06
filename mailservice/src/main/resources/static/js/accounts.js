@@ -61,9 +61,11 @@ function getAccounts(accounts){
 		 $("<option>").val(accounts[i].id).text(accounts[i].displayName).appendTo($select);
 		
 	}
-	$select.change(function(){
 		
-		var accountId = $('#selAccounts').find(":selected").val();
+	
+	$select.change(function(){
+		getAllmessagesByAccountId();
+		/*var accountId = $('#selAccounts').find(":selected").val();
 		
 			$.ajax({
 				type: 'get',
@@ -71,7 +73,6 @@ function getAccounts(accounts){
 				cache: false,
 				contentType: 'application/json',
 				success: function(response){
-					console.log("MOLIMMM")
 					$('.inbox_chat').empty();
 					$('.incoming_msg').empty();
 					initMessages(response);
@@ -82,9 +83,11 @@ function getAccounts(accounts){
 							alert(textStatus, errorThrown);
 						}
 					}
-				});
+				});*/
 	})
-}
+	}
+
+
 function initMessages(messages){
 	for (var i = 0; i < messages.length; i++) {
 		appendMessage(messages[i]);
@@ -157,49 +160,66 @@ function searchica(){
 				});
 	}*/
 
+function getAllmessagesByAccountId(){
+	var accountId = $('#selAccounts').find(":selected").val();
+	$.ajax({
+		type: 'get',
+		url: "http://localhost:8080/elasticsearch/search-messages/" + accountId,
+		cache: false,
+		contentType: 'application/json',
+		success: function(response){
+			$('.inbox_chat').empty();
+			$('.incoming_msg').empty();
+			initMessages(response);
+		},
+			
+			error: function (jqXHR, textStatus, errorThrown) {  
+				if(jqXHR.status=="404"){
+					alert(textStatus, errorThrown);
+				}
+			}
+		});
+}
 
 function searchFunction(){
 	console.log("ON CHANGE SELECT")
 	 var typeField = $("#tipField").val();
-	 var value =$("#value").val().toLowerCase();
+	 var value =$("#value").val().trim().toLowerCase();
+	 var accountId = $('#selAccounts').find(":selected").val();
 	 if(typeField == "SUBJECT"){
 		 if(value==""){
-			//getAllmessagesByAccountId()
+			getAllmessagesByAccountId();
 		 }else{
-			 search1();
+			 searchMessages("searchBySubject/" + accountId + "/" + value);
 		 }
-	 }else if(typeField == "LASTNAME"){
+	 }else if(typeField == "SENDER"){
 		 if(value == ""){
-			 searchAll();
+			 getAllmessagesByAccountId();
 		 }else{
-			 search(value);
+			 searchMessages("searchBySender/" + accountId + "/" + value);
 		 }
-	 }else if(typeField == "NOTE"){
+	 }else if(typeField == "CONTENT"){
 		 if(value == ""){
-			 searchAll();
+			 getAllmessagesByAccountId();
 		 }else{
-			 search("searchByNote/" + value)
+			 searchMessages("searchByContent/" + accountId + "/" + value);
 		 }
 	 }
 
 }
 
-function search1(){
+function searchMessages(v){
 	$(".inbox_chat").empty();
 	$(".incoming_msg").empty();
-	console.log("search");
+	console.log("searchMessages");
 	var field = $('#tipField').find(":selected").val();
-	var value=$("#value").val().trim();
-	var accountId = $('#selAccounts').find(":selected").val();
-	console.log("Pretraga :" + field + value + accountId);
-	var data = {
-			"id" : currentUserId,
-			"firstName" : value,
-	}
+//	var value=$("#value").val().trim();
+//	var accountId = $('#selAccounts').find(":selected").val();
+	console.log("Pretraga :" + field);
 	
 	$.ajax({
 		type: 'get',
-		url: "http://localhost:8080/elasticsearch/search/searchBySubject/" + accountId + "/" + value,
+		url: "http://localhost:8080/elasticsearch/search/" + v,
 		cache: false,
 		contentType: 'application/json',
 		success: function(response){

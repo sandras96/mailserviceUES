@@ -80,6 +80,7 @@ public class MessageDTO implements Serializable {
 		this.dateTime = dateTime;
 		this.subject = subject;
 		this.content = content;
+		this.account = accountDTO;
 		this.unread = unread;
 	}
 	
