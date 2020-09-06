@@ -14,11 +14,12 @@ public interface MessageRepository extends JpaRepository<Message, Long>{
 	Message getBySubject(String subject);
 	Message findBySubject(String subject);
 	List<Message> findMessagesByAccountId(Long id);
+	List<Message> findByTags_IdAndAccountId(Long tagId, Long accountId);
 	
 	@Query(value="SELECT * FROM message m WHERE m.account_id=? ORDER BY m.subject_mess ASC", nativeQuery = true)
 	List<Message> findAllSortBySubject(Long id);
 	
-	@Query(value="SELECT * FROM message m WHERE m.account_id=? ORDER BY m.from_message DESC", nativeQuery = true)
+	@Query(value="SELECT * FROM message m WHERE m.account_id=? ORDER BY m.from_message ASC", nativeQuery = true)
 	List<Message> findAllSortBySender(Long id);
 	
 	@Query(value="SELECT * FROM message m WHERE m.account_id=? ORDER BY m.date_time DESC", nativeQuery = true)

@@ -24,39 +24,37 @@ public class Tag {
 	@JoinColumn(name = "user_id")
 	private User euser;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "account_id")
+	private Account account;
 	
-	@ManyToMany(mappedBy = "tags")
+	
+	@ManyToMany(cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY,mappedBy = "tags")
 	private List<Message> messages = new ArrayList<>();
 
-	
-	
-	
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Tag tag = (Tag) o;
-        return Objects.equals(name, tag.name);
-    }
- 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
-	
-	
 
 	public Tag() {
 		super();
 	}
 
 
-	public Tag(Long id, String name, User euser, List<Message> messages) {
+	public Tag(Long id, String name, User euser, Account account, List<Message> messages) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.euser = euser;
+		this.account = account;
 		this.messages = messages;
+	}
+
+
+	public Account getAccount() {
+		return account;
+	}
+
+
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 
 

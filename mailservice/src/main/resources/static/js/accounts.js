@@ -8,7 +8,7 @@ $(document).ready(function(){
 	currentUserType = sessionStorage.getItem("currentUserType");
 	console.log("currentUserId je " + currentUserId);
 	loadAccounts(currentUserId);
-	
+	$(".messaging").hide();
 });
 
 
@@ -64,6 +64,7 @@ function getAccounts(accounts){
 		
 	
 	$select.change(function(){
+		$(".messaging").show();
 		getAllmessagesByAccountId();
 		/*var accountId = $('#selAccounts').find(":selected").val();
 		
@@ -171,6 +172,7 @@ function getAllmessagesByAccountId(){
 			$('.inbox_chat').empty();
 			$('.incoming_msg').empty();
 			initMessages(response);
+			loadTags(accountId);
 		},
 			
 			error: function (jqXHR, textStatus, errorThrown) {  
@@ -243,7 +245,8 @@ function sortMessages(){
 			getMessagesSortBy("orderbysender")
 		}else if(sortBy == "DATETIME"){
 			getMessagesSortBy("orderbydatetime");
-			
+		}else if(sortBy== ""){
+			getAllmessagesByAccountId();
 		}
 }
 function getMessagesSortBy(sortby){
@@ -421,3 +424,49 @@ function deleteMessage(deleteId){
     });
 }
 
+function loadTags(accountId){
+	$.ajax({
+		url: "http://localhost:8080/mailservice/tags/getAll/" + accountId,
+		type: 'GET',
+		success : function(response){
+			console.log("tagsss" + response)
+			getTags(response)
+		},
+		error: function (jqXHR, textStatus, errorThrown) {  
+			alert(jqXHR.status);
+		}
+    });
+}
+function getTags(tags){
+	 var $select = $("#tagFilter");
+	for (var i = 0; i < tags.length; i++) {
+		 $("<option>").val(tags[i].id).text(tags[i].name).appendTo($select);
+		
+	}
+		
+	
+	$select.change(function(){
+		
+		var tagId = $('#tagFilter').find(":selected").val();
+		var accountId = $('#selAccounts').find(":selected").val();
+		
+			$.ajax({
+				type: 'get',
+				url: "http://localhost:8080/mailservice/tags/message/" + tagId + "/" + accountId ,
+				cache: false,
+				contentType: 'application/json',
+				success: function(response){
+					console.log("response je " + response);
+					$(".inbox_chat").empty();
+					$(".incoming_msg").empty();
+					initMessages(response);
+				},
+					
+					error: function (jqXHR, textStatus, errorThrown) {  
+						if(jqXHR.status=="404"){
+							alert(textStatus, errorThrown);
+						}
+					}
+				});
+	})
+	}

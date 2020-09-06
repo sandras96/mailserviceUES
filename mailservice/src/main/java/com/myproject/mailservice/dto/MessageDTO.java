@@ -156,7 +156,7 @@ public class MessageDTO implements Serializable {
 		ArrayList<TagDTO> ret=new ArrayList<>();
 		if(tags!=null) {
 			for(Tag t: tags)
-				//potencijalno ispraviti
+				
 				ret.add(null);
 		}
 		return ret;

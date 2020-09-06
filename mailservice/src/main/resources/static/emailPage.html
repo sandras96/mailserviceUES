@@ -62,7 +62,15 @@
         <div class="inbox_people">
           <div class="headind_srch">
             <div class="recent_heading">
-              <h4>Primary <span></span></h4>
+              <h4>Primary</h4> <span> <select id="sortByMessages" onChange="sortMessages()">
+			 	<option selected hidden="true" >Sort by</option>
+				<option value="SUBJECT">Subject</option>
+				<option value="SENDER">Sender</option>
+				<option value="DATETIME">DateTime</option>
+				
+			</select><select id="tagFilter">
+			 	<option selected hidden="true">Tag Filter</option>
+			</select></span>
               <ul><!-- 
  			 		<li>
                         <select id="tipField" onChange="searchFunction()">
@@ -77,7 +85,7 @@
                         <button class="glyphicon glyphicon-search" id="searchId"  onclick="searchica()"></button>
                     </li>
                      -->
-             <!--  <li>
+           <!--    <li>
 			 <select id="sortByMessages" onChange="sortMessages()">
 			 	<option selected hidden="true" >Sort by</option>
 				<option value="SUBJECT">Subject</option>
@@ -85,8 +93,8 @@
 				<option value="DATETIME">DateTime</option>
 				
 			</select>
-			</li>
-			</ul> -->
+			</li> -->
+			</ul> 
 			<!-- <select id="tagFilter">
 			 	<option selected hidden="true" >Tag filter</option>
 				<option value="VALUE1">v1</option>
@@ -98,17 +106,28 @@
 			 
 		</div>
             </div>
-            <div class="row">
-            <select id="tipField" onChange="searchFunction()">
+           
+          <div class="row">
+           <!--  <select id="tipField" onChange="searchFunction()">
+                        	<option value="SUBJECT" selected>subject</option>
+                        	<option value="SENDER">from</option>
+                        	<option value="CONTENT">content</option>
+                        	
+                        	
+                        </select> -->
+                        	<div class="srch_bar" > 
+                        	
+                        
+                        <input type="text" class="search-bar col-sm-8" placeholder="Insert the value" id="value"/>
+                        <button class="glyphicon glyphicon-search" id="searchId"  onclick="searchica()"></button> </div>
+                        <select id="tipField" onChange="searchFunction()">
+                        	<option selected hidden="true">Search by</option>
                         	<option value="SUBJECT" selected>subject</option>
                         	<option value="SENDER">from</option>
                         	<option value="CONTENT">content</option>
                         	
                         	
                         </select>
-                        	<div class="srch_bar">
-                        <input type="text" class="search-bar" placeholder="Insert the value" id="value"></input></div>
-                        <button class="glyphicon glyphicon-search" id="searchId"  onclick="searchica()"></button>
             
             
             </div>

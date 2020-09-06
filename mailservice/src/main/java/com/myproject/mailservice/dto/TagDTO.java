@@ -5,6 +5,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.myproject.mailservice.entity.Message;
+import com.myproject.mailservice.entity.Tag;
+
 public class TagDTO implements Serializable {
 
 	/**
@@ -16,13 +19,19 @@ public class TagDTO implements Serializable {
 	private Long id;
 	private String name;
 	private UserDTO user;
+	private AccountDTO account;
 	private List<MessageDTO> messages = new ArrayList<>();
-	public TagDTO(Long id, String name, UserDTO user, List<MessageDTO> messages) {
+	
+	public TagDTO(Long id, String name, UserDTO user, AccountDTO account) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.user = user;
-		this.messages = messages;
+		this.account = account;
+		
+	}
+	public TagDTO(Tag tag) {
+		this(tag.getId(), tag.getName(), new UserDTO(tag.getEuser()), new AccountDTO(tag.getAccount()));
 	}
 	public TagDTO() {
 		super();
@@ -45,13 +54,18 @@ public class TagDTO implements Serializable {
 	public void setUser(UserDTO user) {
 		this.user = user;
 	}
+	public AccountDTO getAccount() {
+		return account;
+	}
+	public void setAccount(AccountDTO account) {
+		this.account = account;
+	}
 	public List<MessageDTO> getMessages() {
 		return messages;
 	}
 	public void setMessages(List<MessageDTO> messages) {
 		this.messages = messages;
 	}
-	
 	
 	
 

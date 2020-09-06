@@ -360,7 +360,6 @@ public class SearchController {
 
 	@GetMapping(value = "/search-messages/{id}")
 	public List<Message> searchMessages(@RequestParam(required = false) String query, @PathVariable("id") Long id) {
-		System.out.println("AAAAAAAAAAAAAAAAAAAAA");
 		if (query == null || query.equals("")) {
 			return messageRepository.findMessagesByAccountId(id);
 				

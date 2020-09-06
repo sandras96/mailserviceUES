@@ -78,6 +78,12 @@ public class MessageService implements MessageInterface{
 		return messageRepository.findByContent(parameter, id);
 	}
 
+	@Override
+	public List<Message> findByTags_IdAndAccountId(Long tagId, Long accountId) {
+		// TODO Auto-generated method stub
+		return messageRepository.findByTags_IdAndAccountId(tagId, accountId);
+	}
+
 
 
 
