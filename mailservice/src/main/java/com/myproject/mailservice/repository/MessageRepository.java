@@ -15,6 +15,12 @@ public interface MessageRepository extends JpaRepository<Message, Long>{
 	Message findBySubject(String subject);
 	List<Message> findMessagesByAccountId(Long id);
 	List<Message> findByTags_IdAndAccountId(Long tagId, Long accountId);
+
+	@Query(value="SELECT m.* FROM message m LEFT JOIN accounts a ON m.account_id = a.account_id WHERE a.user_id =?", nativeQuery = true)
+	List<Message> findMessagesByEuserId(Long id);
+	
+	@Query(value="select m.* from message m inner join message_tag mt on m.message_id = mt.message_id left join tag t on mt.tag_id = t.tag_id where t.tag_id = ? and t.user_id=? group by m.message_id;", nativeQuery = true)
+	List<Message> findByTags_IdAndEuserId(Long tagId, Long userId);
 	
 	@Query(value="SELECT * FROM message m WHERE m.account_id=? ORDER BY m.subject_mess ASC", nativeQuery = true)
 	List<Message> findAllSortBySubject(Long id);

@@ -21,9 +21,9 @@ insert into message (bcc_message, cc_message, content, date_time, from_message, 
 insert into message (bcc_message, cc_message, content, date_time, from_message, subject_mess, to_message, is_unread, account_id, folder_id) values ("bbc", "cc", "cetvrti mejl", '2018-12-12',"kaca", "4 naslov", "kome meni", true,2, null);
 
 
-insert into tag(tag_name, user_id, account_id) values ("important", 1, 1);
-insert into tag(tag_name, user_id, account_id) values ("urgent", 1,1);
-insert into tag(tag_name, user_id, account_id) values ("urgent", 1,2);
+insert into tag(tag_name,user_id) values ("important", 1);
+insert into tag(tag_name, user_id) values ("urgent",1);
+insert into tag(tag_name, user_id) values ("primary",1);
 
 insert into message_tag(message_id, tag_id) values(1,1);
 insert into message_tag(message_id, tag_id) values(1,2);

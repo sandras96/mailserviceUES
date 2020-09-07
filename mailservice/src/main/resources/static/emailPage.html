@@ -62,7 +62,7 @@
         <div class="inbox_people">
           <div class="headind_srch">
             <div class="recent_heading">
-              <h4>Primary</h4> <span> <select id="sortByMessages" onChange="sortMessages()">
+              <h4><span id="primary">All messages</span> <span> <select id="sortByMessages" onChange="sortMessages()">
 			 	<option selected hidden="true" >Sort by</option>
 				<option value="SUBJECT">Subject</option>
 				<option value="SENDER">Sender</option>
@@ -70,8 +70,8 @@
 				
 			</select><select id="tagFilter">
 			 	<option selected hidden="true">Tag Filter</option>
-			</select></span>
-              <ul><!-- 
+			</select></span></h4>
+       <!--        <ul>
  			 		<li>
                         <select id="tipField" onChange="searchFunction()">
                         	<option value="SUBJECT" selected>subject</option>
@@ -93,8 +93,8 @@
 				<option value="DATETIME">DateTime</option>
 				
 			</select>
-			</li> -->
-			</ul> 
+			</li> 
+			</ul> -->
 			<!-- <select id="tagFilter">
 			 	<option selected hidden="true" >Tag filter</option>
 				<option value="VALUE1">v1</option>
@@ -102,12 +102,9 @@
 				<option value="VALUE3">v3</option>
 			</select> -->
 		
-		<div class="dropdown" id="filterTagDiv">
-			 
-		</div>
             </div>
            
-          <div class="row">
+          <div class="searchAndSelect">
            <!--  <select id="tipField" onChange="searchFunction()">
                         	<option value="SUBJECT" selected>subject</option>
                         	<option value="SENDER">from</option>
@@ -119,7 +116,7 @@
                         	
                         
                         <input type="text" class="search-bar col-sm-8" placeholder="Insert the value" id="value"/>
-                        <button class="glyphicon glyphicon-search" id="searchId"  onclick="searchica()"></button> </div>
+                        <button class="glyphicon glyphicon-search" id="searchId"  onclick="searchica()"></button>
                         <select id="tipField" onChange="searchFunction()">
                         	<option selected hidden="true">Search by</option>
                         	<option value="SUBJECT" selected>subject</option>
@@ -128,7 +125,7 @@
                         	
                         	
                         </select>
-            
+             </div>
             
             </div>
            <!--  <div class="srch_bar">

@@ -9,5 +9,6 @@ import com.myproject.mailservice.entity.Tag;
 
 public interface TagRepository extends JpaRepository<Tag, Integer>{
 
-	List<Tag> findTagssByAccountId(Long id);
+	List<Tag> findTagsByEuserId(Long id);
+//	List<Tag> findTagsByAccountId(Long id);
 }

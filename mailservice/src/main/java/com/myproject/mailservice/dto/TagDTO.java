@@ -19,20 +19,22 @@ public class TagDTO implements Serializable {
 	private Long id;
 	private String name;
 	private UserDTO user;
-	private AccountDTO account;
 	private List<MessageDTO> messages = new ArrayList<>();
 	
-	public TagDTO(Long id, String name, UserDTO user, AccountDTO account) {
+	public TagDTO(Long id, String name, UserDTO user) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.user = user;
-		this.account = account;
+		
 		
 	}
 	public TagDTO(Tag tag) {
-		this(tag.getId(), tag.getName(), new UserDTO(tag.getEuser()), new AccountDTO(tag.getAccount()));
+		this(tag.getId(), tag.getName(), new UserDTO(tag.getEuser()));
 	}
+	
+	
+	
 	public TagDTO() {
 		super();
 	}
@@ -53,12 +55,6 @@ public class TagDTO implements Serializable {
 	}
 	public void setUser(UserDTO user) {
 		this.user = user;
-	}
-	public AccountDTO getAccount() {
-		return account;
-	}
-	public void setAccount(AccountDTO account) {
-		this.account = account;
 	}
 	public List<MessageDTO> getMessages() {
 		return messages;

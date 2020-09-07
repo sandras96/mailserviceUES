@@ -7,6 +7,8 @@ import java.util.Objects;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity(name = "Tag")
 @Table(name = "tag")
 public class Tag {
@@ -22,40 +24,30 @@ public class Tag {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
+	@JsonIgnore
 	private User euser;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "account_id")
-	private Account account;
+	
 	
 	
 	@ManyToMany(cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY,mappedBy = "tags")
 	private List<Message> messages = new ArrayList<>();
-
+	
 
 	public Tag() {
 		super();
 	}
 
 
-	public Tag(Long id, String name, User euser, Account account, List<Message> messages) {
+	public Tag(Long id, String name, User euser, List<Message> messages) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.euser = euser;
-		this.account = account;
 		this.messages = messages;
 	}
 
 
-	public Account getAccount() {
-		return account;
-	}
-
-
-	public void setAccount(Account account) {
-		this.account = account;
-	}
 
 
 	public Long getId() {
@@ -98,11 +90,6 @@ public class Tag {
 	}
 
 
-	@Override
-	public String toString() {
-		return "Tag [id=" + id + ", name=" + name + ", euser=" + euser + ", messages=" + messages + "]";
-	}
-	
 	
 	
 	

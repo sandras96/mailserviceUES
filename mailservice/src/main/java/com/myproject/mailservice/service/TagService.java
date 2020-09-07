@@ -21,10 +21,16 @@ public class TagService implements TagInterface {
 		return tagRepository.findAll();
 	}
 
-	@Override
+/*	@Override
 	public List<Tag> findTagsByAccountId(Long id) {
 		// TODO Auto-generated method stub
-		return tagRepository.findTagssByAccountId(id);
+		return tagRepository.findTagsByAccountId(id);
+	}*/
+
+	@Override
+	public List<Tag> findTagsByEuserId(Long id) {
+		// TODO Auto-generated method stub
+		return tagRepository.findTagsByEuserId(id);
 	}
 
 

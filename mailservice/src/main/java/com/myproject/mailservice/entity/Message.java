@@ -56,7 +56,7 @@ public class Message implements Serializable{
 			CascadeType.MERGE
 	})
 	@JsonIgnore
-	@JoinTable(name = "message_tag", joinColumns = @JoinColumn(name = "message_id"), inverseJoinColumns = @JoinColumn(name = "tag_id")		
+	@JoinTable(name = "message_tag", joinColumns = @JoinColumn(name = "message_id", referencedColumnName = "message_id"), inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "tag_id")		
 			)
 	
 	private List<Tag> tags = new ArrayList<>();

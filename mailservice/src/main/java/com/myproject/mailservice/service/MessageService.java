@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.myproject.mailservice.dto.MessageDTO;
+import com.myproject.mailservice.entity.Account;
 import com.myproject.mailservice.entity.Message;
 import com.myproject.mailservice.repository.MessageRepository;
 
@@ -82,6 +83,18 @@ public class MessageService implements MessageInterface{
 	public List<Message> findByTags_IdAndAccountId(Long tagId, Long accountId) {
 		// TODO Auto-generated method stub
 		return messageRepository.findByTags_IdAndAccountId(tagId, accountId);
+	}
+
+	@Override
+	public List<Message> findMessagesByEuserId(Long id) {
+		// TODO Auto-generated method stub
+		return messageRepository.findMessagesByEuserId(id);
+	}
+
+	@Override
+	public List<Message> findByTags_IdAndEuserId(Long tagId, Long userId) {
+		// TODO Auto-generated method stub
+		return messageRepository.findByTags_IdAndEuserId(tagId, userId);
 	}
 
 

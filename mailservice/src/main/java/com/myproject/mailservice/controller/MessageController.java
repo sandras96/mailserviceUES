@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.myproject.mailservice.dto.AccountDTO;
 import com.myproject.mailservice.dto.MessageDTO;
+import com.myproject.mailservice.entity.Account;
 import com.myproject.mailservice.entity.Message;
 import com.myproject.mailservice.service.MessageInterface;
 
@@ -27,6 +29,20 @@ public class MessageController {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
+	 @GetMapping(value = "/user/{id}")
+	    public ResponseEntity<List<MessageDTO>> getMessagesByUser(@PathVariable("id") Long id){
+		 	logger.info("GET request for all messages from user with id: " + id);
+		 	List<Message> messages=messageService.findMessagesByEuserId(id);
+	        List<MessageDTO> messagesDTO=new ArrayList<>();
+	        if(messages == null)
+	            return new ResponseEntity<List<MessageDTO>>(HttpStatus.NOT_FOUND);
+	        else {
+	            for (Message m: messages)
+	                messagesDTO.add(new MessageDTO(m));
+	        }
+	        return new ResponseEntity<List<MessageDTO>>(messagesDTO,HttpStatus.OK);
+	    }
+	 
 	 @GetMapping(value = "/account/{id}")
 	    public ResponseEntity<List<MessageDTO>> getMessagesByAccount(@PathVariable("id") Long id){
 		 	logger.info("GET request for all messages from account with id: " + id);

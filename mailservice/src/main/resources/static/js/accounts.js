@@ -8,10 +8,95 @@ $(document).ready(function(){
 	currentUserType = sessionStorage.getItem("currentUserType");
 	console.log("currentUserId je " + currentUserId);
 	loadAccounts(currentUserId);
-	$(".messaging").hide();
+	loadMessages(currentUserId);
+	loadTags(currentUserId);
+	$("#sortByMessages").hide();
+	$(".searchAndSelect").hide();
+//	$(".messaging").hide();
+	
+	
+	$("#primary").click(function(){
+		console.log("radi li")
+		$(".inbox_chat").empty();
+		$(".incoming_msg").empty();
+		$('#selAccounts').prop('selectedIndex',0);
+		$('#tagFilter').prop('selectedIndex',0);
+		$('#sortByMessages').prop('selectedIndex',0);
+		$("#sortByMessages").hide();
+		$(".searchAndSelect").hide();
+		$("#tagFilter").show();
+		loadMessages(currentUserId);
+		
+	});
 });
 
 
+
+function loadMessages(userId){
+	$.ajax({
+		type: 'get',
+		url: "http://localhost:8080/mailservice/messages/user/" + userId,
+		dataType: 'json',
+		cache: false,
+		success: function(response){
+			 
+			initMessages(response);
+			
+		},
+		error: function (jqXHR, textStatus, errorThrown) {  
+			if(jqXHR.status=="404"){
+				alert(textStatus, errorThrown);
+			}
+		}
+	});
+}
+
+function loadTags(userId){
+	$.ajax({
+		type: 'get',
+		url: "http://localhost:8080/mailservice/tags/getAll/" + userId,
+		dataType: 'json',
+		cache: false,
+		success: function(response){
+			console.log(response)
+			var $select = $("#tagFilter");
+			for (var i = 0; i < response.length; i++) {
+			$("<option>").val(response[i].id).text(response[i].name).appendTo($select);
+			$select.change(function(){
+				
+				var tagId = $('#tagFilter').find(":selected").val();
+				
+					$.ajax({
+						type: 'get',
+						url: "http://localhost:8080/mailservice/tags/message/" + tagId + "/" + userId ,
+						cache: false,
+						contentType: 'application/json',
+						success: function(response){
+							console.log("response je " + response);
+							$(".inbox_chat").empty();
+							$(".incoming_msg").empty();
+							initMessages(response);
+						},
+							
+							error: function (jqXHR, textStatus, errorThrown) {  
+								if(jqXHR.status=="404"){
+									alert(textStatus, errorThrown);
+								}
+							}
+						});
+			})
+			}
+	
+			
+		},
+		error: function (jqXHR, textStatus, errorThrown) {  
+			if(jqXHR.status=="404"){
+				alert(textStatus, errorThrown);
+			}
+		}
+	});
+}
+	
 
 function loadAccounts(userId){
 	console.log("usao u load accounts")
@@ -64,7 +149,7 @@ function getAccounts(accounts){
 		
 	
 	$select.change(function(){
-		$(".messaging").show();
+	//	$(".messaging").show();
 		getAllmessagesByAccountId();
 		/*var accountId = $('#selAccounts').find(":selected").val();
 		
@@ -163,6 +248,9 @@ function searchica(){
 
 function getAllmessagesByAccountId(){
 	var accountId = $('#selAccounts').find(":selected").val();
+	$("#sortByMessages").show();
+	$("#tagFilter").hide();
+	$(".searchAndSelect").show();
 	$.ajax({
 		type: 'get',
 		url: "http://localhost:8080/elasticsearch/search-messages/" + accountId,
@@ -172,7 +260,7 @@ function getAllmessagesByAccountId(){
 			$('.inbox_chat').empty();
 			$('.incoming_msg').empty();
 			initMessages(response);
-			loadTags(accountId);
+	//		loadTagsByAccount(accountId);
 		},
 			
 			error: function (jqXHR, textStatus, errorThrown) {  
@@ -424,7 +512,7 @@ function deleteMessage(deleteId){
     });
 }
 
-function loadTags(accountId){
+/*function loadTagsByAccount(accountId){
 	$.ajax({
 		url: "http://localhost:8080/mailservice/tags/getAll/" + accountId,
 		type: 'GET',
@@ -470,3 +558,5 @@ function getTags(tags){
 				});
 	})
 	}
+
+*/

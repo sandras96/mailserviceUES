@@ -48,6 +48,7 @@ public class User implements Serializable/* , UserDetails */{
 	
 	
 	@OneToMany(mappedBy = "euser", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
 	private List<Tag> tags;
 	
 	@Column(name = "user_username", nullable = false, unique = true)

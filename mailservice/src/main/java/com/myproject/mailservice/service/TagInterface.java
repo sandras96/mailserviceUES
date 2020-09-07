@@ -8,6 +8,7 @@ import com.myproject.mailservice.entity.Tag;
 public interface TagInterface {
 	
 	List<Tag> findAll();
-	List<Tag> findTagsByAccountId(Long id);
+	List<Tag> findTagsByEuserId(Long id);
+//	List<Tag> findTagsByAccountId(Long id);
 
 }
