@@ -3,6 +3,9 @@ package com.myproject.mailservice.dto;
 
 import java.io.Serializable;
 
+import com.myproject.mailservice.entity.Contact;
+import com.myproject.mailservice.entity.Photo;
+
 public class PhotoDTO implements Serializable {
 
 	/**
@@ -46,8 +49,9 @@ public class PhotoDTO implements Serializable {
 		super();
 	}
 	
-	
-	
+	public PhotoDTO(Photo photo) {
+		this(photo.getId(), photo.getName(), photo.getPath(), photo.getPic(), new ContactDTO(photo.getContact()));
+	}
 	
 	public Long getId() {
 		return id;

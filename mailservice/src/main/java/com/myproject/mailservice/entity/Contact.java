@@ -2,7 +2,9 @@ package com.myproject.mailservice.entity;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -67,7 +69,7 @@ public class Contact implements Serializable {
 	
 	@OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore
-	private Set<Photo> photos = new HashSet<>();
+	private List<Photo> photos = new ArrayList<>();
 	
 	
 	public Contact() {
@@ -76,7 +78,7 @@ public class Contact implements Serializable {
 
 	
 	public Contact(Long id, String firstname, String lastname, String displayName, String email, String text,
-			User euser, Set<Photo> photos) {
+			User euser, List<Photo> photos) {
 		super();
 		this.id = id;
 		this.firstname = firstname;
@@ -146,12 +148,13 @@ public class Contact implements Serializable {
 	}
 
 
-	public Set<Photo> getPhotos() {
+
+	public List<Photo> getPhotos() {
 		return photos;
 	}
 
 
-	public void setPhotos(Set<Photo> photos) {
+	public void setPhotos(List<Photo> photos) {
 		this.photos = photos;
 	}
 

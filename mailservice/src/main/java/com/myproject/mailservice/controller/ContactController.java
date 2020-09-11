@@ -1,5 +1,9 @@
 package com.myproject.mailservice.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +21,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.HttpHeaders;
 import com.myproject.mailservice.dto.ContactDTO;
+import com.myproject.mailservice.dto.PhotoDTO;
 import com.myproject.mailservice.entity.Contact;
+import com.myproject.mailservice.entity.Photo;
+import com.myproject.mailservice.repository.PhotoRepository;
 import com.myproject.mailservice.service.ContactInterface;
 import com.myproject.mailservice.service.UserInterface;
 
@@ -34,6 +42,9 @@ public class ContactController {
 	@Autowired
 	private UserInterface userService;
 	
+	@Autowired
+	PhotoRepository photoRepository;
+	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	
@@ -41,6 +52,7 @@ public class ContactController {
 		public ResponseEntity<ContactDTO> getContactById(@PathVariable("id")Long id){
 			logger.info("GET request for contact with id: " + id);
 			Contact contact = contactService.getOne(id);
+			
 			if(contact == null) {
 				logger.error("Contact with id: "+ id +" not found.");
 				return new ResponseEntity<ContactDTO>(HttpStatus.NOT_FOUND);
@@ -117,5 +129,35 @@ public class ContactController {
 			}
 		}
 	 
-		
+	 @PostMapping(value = "/upload_photo", consumes = {"multipart/mixed", "multipart/form-data"})
+	    public Photo uploadImage(@RequestParam("id") Long id,@RequestParam("photo") MultipartFile photo) throws Exception{
+		 	logger.info("POST Method, upload photo for contact with id: "+id+".");   
+		 	System.out.println("id je SLIKE" + id);
+	     //   Photo uploadedPhoto = new Photo(photo.getOriginalFilename(), photo.getInputStream().toString(), photo.getBytes(), contactService.getOne(id));
+	   //     String url = "http://localhost:8080/test/" + photo.getOriginalFilename();
+	   //     HttpHeaders headers = new HttpHeaders();
+	  //      headers.setLocation(URI.create(url));
+	 //       Photo uploadedPhoto = new Photo(photo.getOriginalFilename(), url, photo.getBytes(), contactService.getOne(id));
+	//        System.out.println("uploaded photo je " + uploadedPhoto + "path je " + photo.getInputStream().toString() + "urllll je " + url);
+	//        photoRepository.save(uploadedPhoto);
+	        
+		 	
+	    //    return new ResponseEntity<>(headers, HttpStatus.CREATED);
+	        
+		 	File file = convert(photo);
+		 	String path =file.getAbsolutePath(); //getAbsolutePath()
+		 	System.out.println("pathhh je " + path);
+		 	Photo uploadedPhoto = new Photo(photo.getOriginalFilename(), path, photo.getBytes(), contactService.getOne(id));
+		 	System.out.println("uploadddd " + uploadedPhoto);
+		 	return photoRepository.save(uploadedPhoto);
+	    }
+	 public File convert(MultipartFile file) throws IOException
+	 	{    
+	 	  File convFile = new File(file.getOriginalFilename());
+	 	  convFile.createNewFile(); 
+	 	  FileOutputStream fos = new FileOutputStream(convFile); 
+	 	  fos.write(file.getBytes());
+	 	  fos.close(); 
+	 	  return convFile;
+	 	}
 }

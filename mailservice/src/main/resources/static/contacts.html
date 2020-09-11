@@ -89,7 +89,6 @@
 					<div class="headind_srch">
 						<div class="recent_heading"></div>
 						<div class="row">
-
 							<ul>
  			 		<li>
                         <select id="tipField">
@@ -106,7 +105,6 @@
 										<option>First Name</option>
 										<option>Last Name</option>
 										<option>Note</option>
-
 								</select>
 									<div class="srch_bar">
 										<input type="text" class="search-bar"
@@ -120,7 +118,6 @@
 										<option>First Name</option>
 										<option>Last Name</option>
 										<option>Note</option>
-
 								</select>
 									<div class="srch_bar">
 										<input type="text" class="search-bar"
@@ -130,8 +127,6 @@
 										<i class="glyphicon glyphicon-search" aria-hidden="true"></i>
 									</button>  <a class="glyphicon glyphicon-search"   onclick= "booleanSearch()" >Search</a>
 								</li>
-
-
 							</ul>
 						</div> -->
 						<!--  <div class="srch_bar">
@@ -151,7 +146,6 @@
                     <h5 id="email">email:</h5>
                  <h5>note:</h5>Test, which is a new approach to have all solutions 
                     astrology under one roof.
-
                 </div>
               </div>
             </div>
@@ -307,16 +301,76 @@
 										<label class="control-label" for="editNote">Note:</label><br>
 										<textarea  id="editNote"></textarea>
 									</div>
-									
-									
-									<label for="imgUploadCheckEditUser">Upload new picture?</label>
-									<input type="checkbox" id="imgUploadCheckEditUser"> <input
-										type="file" name="pic" accept="image/*" id="newImgEditUser" />
-
 
 									<div class="modal-footer">
 										<button onClick="editContact()" id="buttonEdit" name="editProfile"
 											class="btn btn-success">Edit</button>
+										<button type="button" class="btn btn-danger"
+											data-dismiss="modal">Close</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					  <!-- Pictures Modal -->
+					<div id="showPicturesModal" class="modal fade" role="dialog">
+						<div class="modal-dialog modal-sm">
+
+							<!-- Modal content-->
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title">Contact pictures</h4>
+								</div>
+								<!-- <div class="row">
+								<div class = "col-sm-8">
+									 <div class="card" id="card">
+									
+ 										 <img id="profilePicture" src="img/img_avatar3.png"alt="Avatar" style="width:50%">
+ 										
+										</div>  
+										</div>
+										<div class = "col-sm-8">
+										 <div class="card" id="card">
+									
+ 										 <img id="profilePicture" src="img/img_avatar3.png"alt="Avatar" style="width:50%">
+ 										<img id="profilePicture" src="img/img_avatar3.png"alt="Avatar" style="width:50%">
+										</div>  
+										</div>
+										<div class = "col-sm-8">
+										 <div class="card" id="card">
+									
+ 										 <img id="profilePicture" src="img/img_avatar3.png"alt="Avatar" style="width:50%">
+ 										
+										</div>  
+										</div>
+									</div> -->
+									<div id="photosDiv" class="col-md-12">
+					<!-- <div class="col-md-6">
+				    <div class="thumbnail">
+				     
+				        <img src="img/img_avatar3.png" alt="Lights" style="width:100%">
+				      
+				    </div>
+				  </div>
+				  	<div class="col-md-6">
+				    <div class="thumbnail">
+				     
+				        <img src="img/img_avatar3.png" alt="Lights" style="width:100%">
+				      
+				    </div>
+				  </div>-->
+				  
+				  </div>
+									<label for="imgUploadCheckMorePic">Upload more pictures?</label>
+									<input type="checkbox" id="idCheck"> <input
+										type="file" name="pic" accept="image/*" id="newPic" />
+
+
+									<div class="modal-footer">
+										<button id="uploadPic" name="editProfile" onClick="uploadMorePic()"
+											class="btn btn-success" value="">Upload</button>
 										<button type="button" class="btn btn-danger"
 											data-dismiss="modal">Close</button>
 									</div>
@@ -330,5 +384,8 @@
 
 
 	</div>
+	<script>
+
+</script>
 </body>
 </html>

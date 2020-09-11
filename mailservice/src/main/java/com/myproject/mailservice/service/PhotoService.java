@@ -19,13 +19,6 @@ public class PhotoService implements PhotoInterface {
 	@Autowired
 	PhotoRepository photoRepository;
 	
-	/*
-	 * @Autowired DTOtoPhoto toPhoto;
-	 */
-	
-	
-
-
 	@Override
 	public List<Photo> getAll() {
 		// TODO Auto-generated method stub
@@ -55,11 +48,7 @@ public class PhotoService implements PhotoInterface {
 		
 	}
 
-	/*
-	 * @Override public Photo edit(PhotoDTO photo, Long id) { photo.setId(id); Photo
-	 * editedPhoto = toPhoto.convert(photo); photoRepository.save(editedPhoto);
-	 * return editedPhoto; }
-	 */
+	
 	@Override
 	public List<Photo> findPhotoByUserId(Long id) {
 		return photoRepository.findPhotoByContactId(id);

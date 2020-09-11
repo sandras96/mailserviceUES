@@ -14,13 +14,11 @@ public class Photo {
 	@Column(name = "photo_id", nullable = false, unique = true)
 	private Long id;
 	
-	@Column(name = "photo_path", nullable = false)
+	@Column(name = "photo_path")
 	@Type(type = "text")
 	private String path;
 	
 	
-	@Column(name="type")
-	private String type;
 	
 	@Column(name="name")
 	private String name;
@@ -42,21 +40,24 @@ public class Photo {
 	}
 
 
-	public Photo(Long id, String path, String type, byte[] pic, Contact contact) {
+	public Photo(Long id, String path, byte[] pic, Contact contact) {
 		super();
 		this.id = id;
 		this.path = path;
-		this.type = type;
 		this.pic = pic;
 		this.contact = contact;
 	}
 
+	public Photo(byte[] pic, Contact contact) {
+		this.pic = pic;
+		this.contact = contact;
+	}
 
-	public Photo(String name, String type, byte[] pic, Contact contact) {
+	public Photo(String name, String path, byte[] pic, Contact contact) {
 		super();
 		
 		this.name = name;
-		this.type = type;
+		this.path = path;
 		this.pic = pic;
 		this.contact = contact;
 	}
@@ -110,67 +111,9 @@ public class Photo {
 	}
 
 
-
-
-
-
-
-
-
-
 	public void setContact(Contact contact) {
 		this.contact = contact;
 	}
-
-
-
-
-
-
-
-
-
-
-	public String getType() {
-		return type;
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -180,23 +123,6 @@ public class Photo {
 	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	public void setPic(byte[] pic) {
 		this.pic = pic;
 	}
@@ -204,29 +130,6 @@ public class Photo {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	@Override
-	public String toString() {
-		return "Photo [id=" + id + ", path=" + path + ", contact=" + contact + "]";
-	}
-	
-	
-	
-	
 	
 
 }

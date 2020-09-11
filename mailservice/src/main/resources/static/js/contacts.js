@@ -1,13 +1,16 @@
 var currentUserId = "";
 var loggedInUsername = "";
 var currentUserType = "";
-
+var moviesDiv = $('#moviesDiv');
 $(document).ready(function() {
 	currentUserId = sessionStorage.getItem("id");
 	loggedInUsername = sessionStorage.getItem("username");
 	console.log("currentUserId je " + currentUserId);
 	currentUserType = sessionStorage.getItem("currentUserType");
 	loadContacts(currentUserId);
+	
+	
+	
 });
 
 
@@ -21,15 +24,14 @@ function loadContacts(userId){
 			for(var i=0; i<response.length; i++){
 				contact = response[i];
 				contactId = contact.id;
-				console.log("contacttt" + contact.firstname)
-				
-			
-			
-				
+				console.log("contacttt" + response)
+		//		getAllPhotos(contactId);
 				var usersDiv = $("#usersDiv1");
 						
 						var tableRow= $('<tr></tr>');
-						var img = $('<td><div class="glyphicon glyphicon-user"></div></td>');
+						var img = $('<td><div><button type="button" class="btn btn-link btn-lg" data-toggle="modal" data-target="#showPicturesModal">'
+								+'<span class="glyphicon glyphicon-user" style="color: black" value="'+contactId+'" onClick="showPicturesModal('+contactId+')"></span><span style="color: black"></span>'
+							+'</button></div></td>');
 						var displayName = $('<td>'+contact.displayName+'</td>');
 						var firstname = $('<td>'+contact.firstname+'</td>');
 						var lastname = $('<td>'+contact.lastname+'</td>');
@@ -108,24 +110,8 @@ function editContact(){
 		alert("Please fill all fields.")
 		return null;
 	}
-	/*var photo = $('#newImgEditUser')[0].files[0];
-	console.log(photo)
-	var checked = false;
-	if($('#imgUploadCheckEditUser').prop('checked')){
-		checked = true;
-	}
-	if(typeof photo == 'undefined' && checked==true){
-		console.log("alohaaa")
-		alert("Picture must be uploaded, or uncheck checkbox.");
-		return;
-	}else 
-	if(typeof photo != 'undefined' && checked==false){
-		alert("Please check checkbox, or remove uploaded file");
-		return;
-	}
-	if(checked==true){
-		uploadPicUser(currentEditUser,photo);
-	}*/
+	
+	
 	var data = {
 			'displayName' : editDisplayname,
 			'email' : editEmail,
@@ -145,9 +131,6 @@ function editContact(){
 			processData: false,
 		    success: function (response) {
 		    	
-		    	/*if(checked==true){
-		    		uploadPicUser(currentEditUser,photo);
-		    	}*/
 		    	console.log(response);
 		    	alert("Successful!")
 		    	location.reload();
@@ -167,7 +150,7 @@ function addContact(){
 	if(displayName == "" || email =="" || firstname == ""|| lastname =="" || note == ""){
 		alert("Please fill all fields");
 	}
-/*	var photo = $('#newImgUser')[0].files[0];
+	var photo = $('#newImgUser')[0].files[0];
 	var checked = false;
 	if($('#imgUploadCheckUser').prop('checked')){
 		checked = true;
@@ -180,7 +163,7 @@ function addContact(){
 	if(typeof photo != 'undefined' && checked==false){
 		alert("Please check checkbox, or remove uploaded file");
 		return;
-	}*/
+	}
 	var data = new FormData();
 	data.append('displayName', displayName);
 	data.append('email', email);
@@ -188,6 +171,10 @@ function addContact(){
 	data.append('lastname', lastname);
 	data.append('text', note);
 	data.append('euser', currentUserId);
+	if(checked == true){
+		data.append('photo', photo);
+	}
+	console.log(data);
 	$.ajax({
 		contentType : 'application/json',
 		url: 'http://localhost:8080/mailservice/contacts/addContact',
@@ -197,10 +184,10 @@ function addContact(){
 	    cache: false,
 		processData: false,
 		success: function(response){
-		/*	if(checked==true){
-        		uploadPicUser(response.id,photo);
-        	}
-			console.log(photo)*/
+			if(checked==true){
+        		uploadImage(response.id,photo);
+			}
+			console.log(photo)
 			alert("Successful!")
 			location.reload();
 			
@@ -211,3 +198,108 @@ function addContact(){
 		}
     });
 }
+
+function uploadImage(id,photo){
+	console.log(id+" "+photo)
+	var data = new FormData();
+	data.append("id",id)
+	data.append("photo",photo)
+	console.log("photo je" + photo)
+	$.ajax({
+		type: 'POST',
+        url: 'http://localhost:8080/mailservice/contacts/upload_photo',
+        contentType: false,
+        data: data,
+		cache: false,
+		processData: false,
+        success: function (response) {
+        	
+        	console.log(response)
+        	console.log("Success");
+        	location.reload();
+        	
+        },
+		error: function (jqXHR, textStatus, errorThrown) {  
+			alert(textStatus);
+		}
+    });
+}
+
+function uploadMorePic(){
+	var contactId = document.getElementById("uploadPic").value;
+	console.log("contactIddd " + contactId)
+	var photo = $('#newPic')[0].files[0];
+	var checked = false;
+	if($('#idCheck').prop('checked')){
+		checked = true;
+	}
+	if(typeof photo == 'undefined' && checked==true){
+		console.log("alohaaa")
+		alert("Picture must be uploaded, or uncheck checkbox.");
+		return;
+	}else 
+	if(typeof photo != 'undefined' && checked==false){
+		alert("Please check checkbox, or remove uploaded file");
+		return;
+	}
+	if(checked==true){
+		uploadImage(contactId,photo);
+	}else{
+		location.reload();
+	}
+}
+
+function showPicturesModal(id){
+	console.log("showPicturesModal")
+	$("#photosDiv").empty();
+	document.getElementById("uploadPic").value = id;
+	$.ajax({
+		type: 'get',
+		url: "http://localhost:8080/mailservice/photo/contact/" + id,
+		cache: false,
+		success: function(response){
+			console.log(response)
+			if(response.length == 0){
+				var divColumn = $('<div><p><b>No photos</b></p></div><br/><br/><br/><br/>');
+				$("#photosDiv").append(divColumn);
+			}else{
+				initPhotos(response, id);	
+			}		
+			},
+			error: function (jqXHR, textStatus, errorThrown) {  
+				alert(textStatus);
+			}
+			
+	    });
+	}
+
+function initPhotos(photos, id){
+	console.log("initPhotos" + photos)
+	$("#photosDiv").empty();
+	for (var i = 0; i < photos.length; i++) {
+		appendPhoto(photos[i],id);
+		}
+	
+	};
+
+function appendPhoto(photo,id){
+	console.log("appendPhoto")
+	
+	var divColumn = $('<div class="col-md-6"></div>');
+	var divThumbnail = $('<div class="thumbnail"></div>');
+	var contactPhoto = 'data:image/gif;base64,'+photo.pic;
+	/*var img1 = document.createElement("img");
+	var divThumbnail = document.createElement("div");
+	divThumbnail.setAttribute('class', 'thumbnail');
+	img1.setAttribute('src', contactPhoto);*/
+//	divThumbnail.appendChild(img1);
+	var img = $('<img src="' + contactPhoto + '" alt="Lights" style="width:100%">');
+	//var button = $('<button type="button" class=" btn btn-xs glyphicon glyphicon-remove" style="float:right" value="'+photo.id+'"></button>');
+	//divThumbnail.append(button)
+	divThumbnail.append(img);
+	
+	divColumn.append(divThumbnail);
+	$("#photosDiv").append(divColumn);
+	
+}
+
