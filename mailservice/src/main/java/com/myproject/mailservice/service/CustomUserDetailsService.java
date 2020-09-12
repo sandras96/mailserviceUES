@@ -1,6 +1,5 @@
 package com.myproject.mailservice.service;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
         } else {
-            return (UserDetails) user;
+            return user;
         }
 	}
 	//Funkcija pomocu koje korisnik menja svoju lozinku

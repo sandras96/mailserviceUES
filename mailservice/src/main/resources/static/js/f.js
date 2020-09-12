@@ -17,6 +17,7 @@ $(document).ready(function(){
 	
 	loginStatus();
 	
+	$('.pass_show').append('<span class="ptxt">Show</span>');  
 });
 
 function loginStatus(){
@@ -51,41 +52,7 @@ function logout(){
     window.location.href = "index.html";
 }
 
-function login(){
-	console.log("u loginu sammm")
-	var username= $('#inputUsername').val().trim();
-	var password = $('#inputPassword').val();
-	if(username == "" || password ==""){
-		alert("Please fill all fields.")
-		return;
-	}
-	console.log("usr je:" + username + "pass je" + password)
-	$.ajax({
-		type: 'get',
-		url: "http://localhost:8080/mailservice/users/" + username +"/" + password,
-		
-		cache: false,
-		success: function(response){
-			console.log(response)
-			if (typeof(Storage) !== "undefined") {
-        	    sessionStorage.setItem("id", response.id);
-        		sessionStorage.setItem("username", response.username);
-        		sessionStorage.setItem("usertype", response.userType);
-        	} else {
-        	    alert("Sorry, your browser doesn't support Web Storage...");
-        	}
-		
-        	location.reload();
-        },
-		error: function (jqXHR, textStatus, errorThrown) {  
-			if(jqXHR.status="404"){
-				alert("User doesn't exist.");
-			}
-			console.log(textStatus)
-			
-		}
-    });
-}
+
 
 function signUp(){
 	var usernameInput = $('#inputUsername1').val().trim();
@@ -178,3 +145,146 @@ function loginAuth(){
 	});
 
 }
+
+function showMyProfile(){
+	var token = localStorage.getItem("token");
+	console.log("show profile")
+	$.ajax({
+		contentType : 'application/json',
+		url: 'https://localhost:8080/mailservice/users/' + currentUserId,
+		headers:{Authorization:"Bearer " + token},
+		type: 'GET',
+        dataType: 'json',
+		cache: false,
+		processData: false,
+		success: function(response){
+			console.log(response)
+			$("#editFirstname").attr('placeholder', response.firstname);
+			$("#editLastname").attr('placeholder', response.lastname);
+			$('#roleSelectEdit').val(response.authority);
+			
+		},
+		error: function (jqXHR, textStatus, errorThrown) {  
+			alert(jqXHR.status);
+			
+		}
+    });
+}
+
+function editUser(){
+	var token = localStorage.getItem("token");
+	var editFirstname = $('#editFirstname').val().trim();
+	var editLastname = $('#editLastname').val().trim();
+	var userType = $('#roleSelectEdit').val();
+	console.log("usrType" + userType);
+	
+	var data = {
+			'firstname' : editFirstname,
+			'lastname' : editLastname,
+			'authority' : userType,
+			
+	}
+	console.log(data)
+	$.ajax({
+		contentType : 'application/json',
+		url: 'https://localhost:8080/mailservice/users/editUser/' + currentUserId,
+		headers:{Authorization:"Bearer " + token},
+		type: 'PUT',
+		data: JSON.stringify(data),
+        dataType: 'json',
+		cache: false,
+		processData: false,
+		success: function(response){
+			console.log(response)
+			alert("Success")
+			location.reload();
+			
+		},
+		error: function (jqXHR, textStatus, errorThrown) {  
+			alert(jqXHR.status);
+			
+		}
+    });
+}
+function changePassword(){
+	var token = localStorage.getItem("token");
+	var currentPassword = $('#currentPassword').val().trim();
+	var newPassword = $('#newPassword').val().trim();
+	var confirmPassword = $('#confirmPassword').val().trim();
+	var token = localStorage.getItem("token");
+	if(newPassword != confirmPassword){
+		alert("**Password doesn't match!")
+	}
+	var data ={
+			'oldPassword':currentPassword,
+			'newPassword':newPassword
+	}
+	$.ajax({
+		type: 'POST',
+        contentType: 'application/json',
+        url: 'https://localhost:8080/api/auth/change-password',
+        headers:{Authorization:"Bearer " + token},
+        data: JSON.stringify(data),
+        dataType: 'json',
+		cache: false,
+		processData: false,
+        success: function (response) {
+        	
+        },
+		error: function (jqXHR, textStatus, errorThrown) {  
+			if(jqXHR.status=="403"){
+				alert("error");
+			}
+		}
+        
+    })
+    window.location.href = "index.html";
+
+}
+
+  
+
+$(document).on('click','.pass_show .ptxt', function(){ 
+
+$(this).text($(this).text() == "Show" ? "Hide" : "Show"); 
+
+$(this).prev().attr('type', function(index, attr){return attr == 'password' ? 'text' : 'password'; }); 
+
+});  
+
+
+/*function login(){
+	console.log("u loginu sammm")
+	var username= $('#inputUsername').val().trim();
+	var password = $('#inputPassword').val();
+	if(username == "" || password ==""){
+		alert("Please fill all fields.")
+		return;
+	}
+	console.log("usr je:" + username + "pass je" + password)
+	$.ajax({
+		type: 'get',
+		url: "http://localhost:8080/mailservice/users/" + username +"/" + password,
+		
+		cache: false,
+		success: function(response){
+			console.log(response)
+			if (typeof(Storage) !== "undefined") {
+        	    sessionStorage.setItem("id", response.id);
+        		sessionStorage.setItem("username", response.username);
+        		sessionStorage.setItem("usertype", response.userType);
+        	} else {
+        	    alert("Sorry, your browser doesn't support Web Storage...");
+        	}
+		
+        	location.reload();
+        },
+		error: function (jqXHR, textStatus, errorThrown) {  
+			if(jqXHR.status="404"){
+				alert("User doesn't exist.");
+			}
+			console.log(textStatus)
+			
+		}
+    });
+}*/

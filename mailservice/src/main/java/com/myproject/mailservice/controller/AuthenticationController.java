@@ -105,6 +105,7 @@ public class AuthenticationController {
 	        public String oldPassword;
 	        public String newPassword;
 	    }
+	    
 	    @RequestMapping(value="/register", method = RequestMethod.POST)
 		public ResponseEntity<UserDTO> register(@RequestBody UserDTO userDto)
 													{

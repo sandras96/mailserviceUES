@@ -29,7 +29,7 @@
 			<div class="container-fluid">
 				<div class="navbar-header">
 					<a class="navbar-brand" href="index.html"><span
-						style="color: white">Mail Service</span>&nbsp &nbsp&nbsp &nbsp<span style="color: white" id="loggedInUsr"></span></a>
+						style="color: white">Mail Service</span>&nbsp &nbsp&nbsp &nbsp</a>
 				</div>
 
 				<ul class="nav navbar-nav navbar-right">
@@ -67,6 +67,13 @@
 					<li id="accountsButton">
 						<button type="button" class="btn btn-link btn-lg" onclick="location.href='accounts.html';">
 							<span class="glyphicon glyphicon-user" style="color: white"></span><span style="color: white">My Accounts</span>
+						</button>
+					</li>
+						<li id="profileButton">
+						<button type="button" class="btn btn-link btn-lg login" onClick="showMyProfile()"
+							data-toggle="modal" data-target="#profileModal">
+							<span class="glyphicon glyphicon-user" style="color: white"></span>
+							<span style="color: white">My Profile</span>
 						</button>
 					</li>
 					<!-- <li id="userAccounts">
@@ -172,8 +179,51 @@
                                 </div>
 						
 						<div class="modal-footer">
+											
+						
 							<button id="signupButton" type="submit" name="signup" onClick="signUp()"
 								class="btn btn-success">Sign up</button>
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+				<!-- My Profile Modal -->
+		<div id="profileModal" class="modal fade" role="dialog">
+			<div class="modal-dialog modal-sm">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Edit profile</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label class="control-label" for="inputFirstName">
+								Firstname</label> <input type="text" id="editFirstname" name="name">								
+						</div>					
+						<div class="form-group">
+							<label class="control-label" for="inputLastName">
+								 Lastname</label> <input type="text" id="editLastname" name="name">
+						</div>
+						     <div>
+                                	<label for="roleSelectEdit">User role: </label>
+                                    <select id="roleSelectEdit" >
+                                    	<option value="USER">User</option>
+                                        <option value="ADMIN">Admin</option>
+                                    </select>  
+                                </div>
+						
+						<div class="modal-footer">
+							<div class="form-group">
+							<a href="changepassword.html"><label class="control-label">Change password?</label></a>
+							
+						</div>
+							<button id="profBUtt" type="submit" name="signup" onClick="editUser()"
+								class="btn btn-success">Edit</button>
 							<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 						</div>
 					</div>

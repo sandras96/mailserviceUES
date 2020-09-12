@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +41,17 @@ public class UserController {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
+	@GetMapping(value="/{id}")
+	public ResponseEntity<UserDTO> getUserById(@PathVariable("id")Long id){
+		logger.info("GET request for user with id: " + id);
+		User user = userService.getOne(id);
+		if(user == null) {
+			logger.error("User with id: "+ id +" not found.");
+			return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
+		}else {
+			return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.OK);
+		}
+}
 	
 	@GetMapping(value="/{username}/{password}")
 	public ResponseEntity<UserDTO> findByUsernameAndPassword(@PathVariable("username")String username, @PathVariable("password") String password){
@@ -53,6 +66,34 @@ public class UserController {
 		
 	}
 	
-	
+	@PutMapping(value = "/editUser/{id}" ,consumes = "application/json" )
+	public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDto,@PathVariable("id")Long id){
+		logger.info("PUT metoda, update usera sa id: "+id );
+		User user=userService.getOne(id);
+		
+		if(user == null) {
+			return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
+		}
+		System.out.println("pass je :" + user.getPassword() );
+		if(userDto.getFirstname().equals("")) {
+			user.setFirstname(user.getFirstname());
+		}else {
+			user.setFirstname(userDto.getFirstname());
+		}
+		if(userDto.getLastname().equals("")) {
+			user.setLastname(user.getLastname());
+		}else {
+			user.setLastname(userDto.getLastname());
+		}
+		Authority authority = asi.getByName(userDto.getAuthority());
+		System.out.println("auth" + authority);
+		Set<Authority> authorities= new HashSet<>();
+		authorities.add(authority);
+		user.setUser_authorities(authorities);
+		userService.save(user);
+		System.out.println("User jee" + user);
+		return new ResponseEntity<UserDTO>(new UserDTO(user),HttpStatus.OK);
+		
+	}
 
 }
