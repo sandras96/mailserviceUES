@@ -5,7 +5,7 @@ var currentUserType = "";
 $(document).ready(function(){
 	currentUserId = sessionStorage.getItem("id");
 	loggedInUsername = sessionStorage.getItem("username");
-	currentUserType = sessionStorage.getItem("currentUserType");
+	currentUserType = sessionStorage.getItem("userRole");
 	console.log("currentUserId je " + currentUserId);
 	loadAccounts(currentUserId);
 	loadMessages(currentUserId);
@@ -33,9 +33,11 @@ $(document).ready(function(){
 
 
 function loadMessages(userId){
+	var token = localStorage.getItem("token");
 	$.ajax({
 		type: 'get',
-		url: "http://localhost:8080/mailservice/messages/user/" + userId,
+		url: "https://localhost:8080/mailservice/messages/user/" + userId,
+		headers:{Authorization:"Bearer " + token},
 		dataType: 'json',
 		cache: false,
 		success: function(response){
@@ -52,9 +54,11 @@ function loadMessages(userId){
 }
 
 function loadTags(userId){
+	var token = localStorage.getItem("token");
 	$.ajax({
 		type: 'get',
-		url: "http://localhost:8080/mailservice/tags/getAll/" + userId,
+		url: "https://localhost:8080/mailservice/tags/getAll/" + userId,
+		headers:{Authorization:"Bearer " + token},
 		dataType: 'json',
 		cache: false,
 		success: function(response){
@@ -68,7 +72,7 @@ function loadTags(userId){
 				
 					$.ajax({
 						type: 'get',
-						url: "http://localhost:8080/mailservice/tags/message/" + tagId + "/" + userId ,
+						url: "https://localhost:8080/mailservice/tags/message/" + tagId + "/" + userId ,
 						cache: false,
 						contentType: 'application/json',
 						success: function(response){
@@ -99,10 +103,12 @@ function loadTags(userId){
 	
 
 function loadAccounts(userId){
+	var token = localStorage.getItem("token");
 	console.log("usao u load accounts")
 	$.ajax({
 		type: 'get',
-		url: "http://localhost:8080/mailservice/accounts/user/" + userId,
+		url: "https://localhost:8080/mailservice/accounts/user/" + userId,
+		headers:{Authorization:"Bearer " + token},
 		dataType: 'json',
 		cache: false,
 		success: function(response){
@@ -155,7 +161,7 @@ function getAccounts(accounts){
 		
 			$.ajax({
 				type: 'get',
-				url: "http://localhost:8080/elasticsearch/search-messages/" + accountId,
+				url: "https://localhost:8080/elasticsearch/search-messages/" + accountId,
 				cache: false,
 				contentType: 'application/json',
 				success: function(response){
@@ -181,6 +187,7 @@ function initMessages(messages){
 	}
 };
 function appendMessage(message){
+	var token = localStorage.getItem("token");
 	var div1 = $('<div class="chat_list active_chat" value='+message.id+'><div class="chat_people">'+
                '<div class="chat_img"  value='+message.id+'> <img src="/img/emailicon.jpg" alt="sunil" id="img'+message.id+'" value='+message.id+'></div>'+
                ' <div class="chat_ib"><h5 class="inner"id="subject">Subject: '+message.subject+'<span class="chat_date" id="datetime">'+message.dateTime+'</span></h5>'+
@@ -194,8 +201,8 @@ function appendMessage(message){
 		  var imageId = $(this).attr("value"); 
 		  $.ajax({
 				type: 'get',
-				url: "http://localhost:8080/mailservice/messages/" + imageId,
-				
+				url: "https://localhost:8080/mailservice/messages/" + imageId,
+				headers:{Authorization:"Bearer " + token},
 				cache: false,
 				success: function(response){
 					console.log("horaaaaj" + response.subject)
@@ -233,7 +240,7 @@ function searchica(){
 	console.log(accountId)
 	$.ajax({
 		type: 'get',
-		url: "http://localhost:8080/elasticsearch/search-messages/",
+		url: "https://localhost:8080/elasticsearch/search-messages/",
 		cache: false,
 		success: function(response){
 			console.log(response)
@@ -247,13 +254,15 @@ function searchica(){
 	}*/
 
 function getAllmessagesByAccountId(){
+	var token = localStorage.getItem("token");
 	var accountId = $('#selAccounts').find(":selected").val();
 	$("#sortByMessages").show();
 	$("#tagFilter").hide();
 	$(".searchAndSelect").show();
 	$.ajax({
 		type: 'get',
-		url: "http://localhost:8080/elasticsearch/search-messages/" + accountId,
+		url: "https://localhost:8080/elasticsearch/search-messages/" + accountId,
+		headers:{Authorization:"Bearer " + token},
 		cache: false,
 		contentType: 'application/json',
 		success: function(response){
@@ -272,6 +281,7 @@ function getAllmessagesByAccountId(){
 }
 
 function searchFunction(){
+	var token = localStorage.getItem("token");
 	console.log("ON CHANGE SELECT")
 	 var typeField = $("#tipField").val();
 	 var value =$("#value").val().trim().toLowerCase();
@@ -299,6 +309,7 @@ function searchFunction(){
 }
 
 function searchMessages(v){
+	var token = localStorage.getItem("token");
 	$(".inbox_chat").empty();
 	$(".incoming_msg").empty();
 	console.log("searchMessages");
@@ -309,7 +320,8 @@ function searchMessages(v){
 	
 	$.ajax({
 		type: 'get',
-		url: "http://localhost:8080/elasticsearch/search/" + v,
+		url: "https://localhost:8080/elasticsearch/search/" + v,
+		headers:{Authorization:"Bearer " + token},
 		cache: false,
 		contentType: 'application/json',
 		success: function(response){
@@ -338,13 +350,14 @@ function sortMessages(){
 		}
 }
 function getMessagesSortBy(sortby){
+	var token = localStorage.getItem("token");
 	var accountId = $('#selAccounts').find(":selected").val();
 	
 	console.log("account id je " + accountId)
 	$.ajax({
 		type: 'get',
-		url: "http://localhost:8080/mailservice/messages/account/" + sortby +"/"+ accountId,
-
+		url: "https://localhost:8080/mailservice/messages/account/" + sortby +"/"+ accountId,
+		headers:{Authorization:"Bearer " + token},
 		cache: false,
 		success: function(response){
 			$('.inbox_chat').empty();
@@ -364,6 +377,7 @@ function getMessagesSortBy(sortby){
 
 
 function addAccount(){
+	var token = localStorage.getItem("token");
 	var smtpAddress = $('#addsmtpAddress').val();
 	var smtpPort = $('#addsmtpPort').val();
 	var inServerType = $('#addinServerType').val();
@@ -390,7 +404,8 @@ function addAccount(){
 	console.log(data)
 	$.ajax({
 		contentType : 'application/json',
-		url: 'http://localhost:8080/mailservice/accounts/addAccount',
+		url: 'https://localhost:8080/mailservice/accounts/addAccount',
+		headers:{Authorization:"Bearer " + token},
 		type: 'POST',
 		contentType: false,
 	    data: data,
@@ -410,9 +425,11 @@ function addAccount(){
 }
 
 function deleteAccount(deleteId){
+	var token = localStorage.getItem("token");
 	if (!confirm('Are you sure you want to delete this contact?' + deleteId)) return;
 	$.ajax({
-		url: "http://localhost:8080/mailservice/accounts/deleteAccount/"+deleteId,
+		url: "https://localhost:8080/mailservice/accounts/deleteAccount/"+deleteId,
+		headers:{Authorization:"Bearer " + token},
 		type: 'DELETE',
 		success : function(response){
 			alert("Deleted!")
@@ -425,9 +442,11 @@ function deleteAccount(deleteId){
 }
 
 function editAccountModal(editId){
+	var token = localStorage.getItem("token");
 	$("#buttonEdit").val(editId);
 	$.ajax({
-		url: "http://localhost:8080/mailservice/accounts/" + editId,
+		url: "https://localhost:8080/mailservice/accounts/" + editId,
+		headers:{Authorization:"Bearer " + token},
 		type: 'GET',
 		dataType: 'json',
 		cache : false,
@@ -449,6 +468,7 @@ function editAccountModal(editId){
 }
 
 function editAccount(){
+	var token = localStorage.getItem("token");
 	console.log("heeej")
 	var smtpAddress = $('#editsmtpAddress').val();
 	var smtpPort = $('#editsmtpPort').val();
@@ -476,7 +496,8 @@ function editAccount(){
 	console.log(data)
 	$.ajax({
 		type: 'PUT',
-		url: "http://localhost:8080/mailservice/accounts/editAccount/"+ valEditButton,
+		url: "https://localhost:8080/mailservice/accounts/editAccount/"+ valEditButton,
+		headers:{Authorization:"Bearer " + token},
 		 contentType: 'application/json',
 		  data: JSON.stringify(data),
 		    dataType: 'json',
@@ -498,9 +519,11 @@ function editAccount(){
 }
 
 function deleteMessage(deleteId){
+	var token = localStorage.getItem("token");
 	if (!confirm('Are you sure you want to delete this message?' + deleteId)) return;
 	$.ajax({
-		url: "http://localhost:8080/mailservice/messages/deleteMessage/"+deleteId,
+		url: "https://localhost:8080/mailservice/messages/deleteMessage/"+deleteId,
+		headers:{Authorization:"Bearer " + token},
 		type: 'DELETE',
 		success : function(response){
 			alert("Deleted!")
@@ -514,7 +537,7 @@ function deleteMessage(deleteId){
 
 /*function loadTagsByAccount(accountId){
 	$.ajax({
-		url: "http://localhost:8080/mailservice/tags/getAll/" + accountId,
+		url: "httpss://localhost:8080/mailservice/tags/getAll/" + accountId,
 		type: 'GET',
 		success : function(response){
 			console.log("tagsss" + response)
@@ -540,7 +563,7 @@ function getTags(tags){
 		
 			$.ajax({
 				type: 'get',
-				url: "http://localhost:8080/mailservice/tags/message/" + tagId + "/" + accountId ,
+				url: "https://localhost:8080/mailservice/tags/message/" + tagId + "/" + accountId ,
 				cache: false,
 				contentType: 'application/json',
 				success: function(response){

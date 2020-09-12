@@ -1,12 +1,14 @@
 var currentUserId = "";
 var loggedInUsername = "";
 var currentUserType = "";
+var token = "";
 var moviesDiv = $('#moviesDiv');
 $(document).ready(function() {
 	currentUserId = sessionStorage.getItem("id");
 	loggedInUsername = sessionStorage.getItem("username");
+	
 	console.log("currentUserId je " + currentUserId);
-	currentUserType = sessionStorage.getItem("currentUserType");
+	currentUserType = sessionStorage.getItem("userRole");
 	loadContacts(currentUserId);
 	
 	
@@ -15,10 +17,11 @@ $(document).ready(function() {
 
 
 function loadContacts(userId){
+	var token = localStorage.getItem("token");
 	$.ajax({
 		type: 'get',
-		url: "http://localhost:8080/mailservice/contacts/user/" + userId,
-		
+		url: "https://localhost:8080/mailservice/contacts/user/" + userId,
+		headers:{Authorization:"Bearer " + token},
 		cache: false,
 		success: function(response){
 			for(var i=0; i<response.length; i++){
@@ -63,9 +66,11 @@ function loadContacts(userId){
 		}
 
 function deleteContact(deleteId){
+	var token = localStorage.getItem("token");
 	if (!confirm('Are you sure you want to delete this contact?' + deleteId)) return;
 	$.ajax({
-		url: "http://localhost:8080/mailservice/contacts/deleteContact/"+deleteId,
+		url: "https://localhost:8080/mailservice/contacts/deleteContact/"+deleteId,
+		headers:{Authorization:"Bearer " + token},
 		type: 'DELETE',
 		success : function(response){
 			alert("Deleted!")
@@ -78,9 +83,11 @@ function deleteContact(deleteId){
 }
 
 function editContactModal(editId){
+	var token = localStorage.getItem("token");
 	$("#buttonEdit").val(editId);
 	$.ajax({
-		url: "http://localhost:8080/mailservice/contacts/" + editId,
+		url: "https://localhost:8080/mailservice/contacts/" + editId,
+		headers:{Authorization:"Bearer " + token},
 		type: 'GET',
 		dataType: 'json',
 		cache : false,
@@ -99,6 +106,7 @@ function editContactModal(editId){
 }
 
 function editContact(){
+	var token = localStorage.getItem("token");
 	console.log("heeej")
 	var editDisplayname = $('#editDisplayname').val();
 	var editEmail =$('#editEmail').val();
@@ -123,7 +131,8 @@ function editContact(){
 	console.log(data)
 	$.ajax({
 		type: 'PUT',
-		url: "http://localhost:8080/mailservice/contacts/editContact/"+ valEditButton,
+		url: "https://localhost:8080/mailservice/contacts/editContact/"+ valEditButton,
+		headers:{Authorization:"Bearer " + token},
 		 contentType: 'application/json',
 		  data: JSON.stringify(data),
 		    dataType: 'json',
@@ -142,6 +151,7 @@ function editContact(){
 }
 
 function addContact(){
+	var token = localStorage.getItem("token");
 	var displayName = $('#addDisplayname').val();
 	var email = $('#addEmail').val();
 	var firstname = $('#addFirstname').val();
@@ -177,7 +187,8 @@ function addContact(){
 	console.log(data);
 	$.ajax({
 		contentType : 'application/json',
-		url: 'http://localhost:8080/mailservice/contacts/addContact',
+		url: 'https://localhost:8080/mailservice/contacts/addContact',
+		headers:{Authorization:"Bearer " + token},
 		type: 'POST',
 		contentType: false,
 	    data: data,
@@ -200,6 +211,7 @@ function addContact(){
 }
 
 function uploadImage(id,photo){
+	var token = localStorage.getItem("token");
 	console.log(id+" "+photo)
 	var data = new FormData();
 	data.append("id",id)
@@ -207,7 +219,8 @@ function uploadImage(id,photo){
 	console.log("photo je" + photo)
 	$.ajax({
 		type: 'POST',
-        url: 'http://localhost:8080/mailservice/contacts/upload_photo',
+        url: 'https://localhost:8080/mailservice/contacts/upload_photo',
+        headers:{Authorization:"Bearer " + token},
         contentType: false,
         data: data,
 		cache: false,
@@ -226,6 +239,7 @@ function uploadImage(id,photo){
 }
 
 function uploadMorePic(){
+	var token = localStorage.getItem("token");
 	var contactId = document.getElementById("uploadPic").value;
 	console.log("contactIddd " + contactId)
 	var photo = $('#newPic')[0].files[0];
@@ -250,12 +264,14 @@ function uploadMorePic(){
 }
 
 function showPicturesModal(id){
+	var token = localStorage.getItem("token");
 	console.log("showPicturesModal")
 	$("#photosDiv").empty();
 	document.getElementById("uploadPic").value = id;
 	$.ajax({
 		type: 'get',
-		url: "http://localhost:8080/mailservice/photo/contact/" + id,
+		url: "https://localhost:8080/mailservice/photo/contact/" + id,
+		headers:{Authorization:"Bearer " + token},
 		cache: false,
 		success: function(response){
 			console.log(response)

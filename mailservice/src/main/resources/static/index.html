@@ -20,6 +20,7 @@
         text-align: center;
       }
     </style>
+    <link rel="icon" type="image/png"  href="img/emailicon.jpg">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
 </head>
 <body>
@@ -124,7 +125,7 @@
 								placeholder="Password">
 						</div>
 						<div class="modal-footer">
-							<button onClick="login()" class="btn btn-success">Login</button>
+							<button onClick="loginAuth()" class="btn btn-success">Login</button>
 							<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 						</div>
 					</div>
@@ -153,12 +154,25 @@
 								placeholder="Password">
 						</div>
 						<div class="form-group">
-							<label class="control-label" for="inputName">&nbsp &nbsp
-								&nbsp &nbspName</label> <input type="text" id="inputName" name="name"
-								placeholder="Name">
+							<label class="control-label" for="inputFirstName">
+								Firstname</label> <input type="text" id="inputFirstname" name="name"
+								placeholder="Firstname">
+						</div>					
+						<div class="form-group">
+							<label class="control-label" for="inputLastName">
+								 Lastname</label> <input type="text" id="inputLastname" name="name"
+								placeholder="Lastname">
 						</div>
+						     <div>
+                                	<label for="roleSelectEdit">User role: </label>
+                                    <select id="roleSelectAdd" >
+                                    	<option value="USER">User</option>
+                                        <option value="ADMIN">Admin</option>
+                                    </select>  
+                                </div>
+						
 						<div class="modal-footer">
-							<button id="signupButton" type="submit" name="signup"
+							<button id="signupButton" type="submit" name="signup" onClick="signUp()"
 								class="btn btn-success">Sign up</button>
 							<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 						</div>

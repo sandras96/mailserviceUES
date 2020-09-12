@@ -15,6 +15,7 @@ $(document).ready(function() {
 });
 
 function getAllmessages(){
+	
 	var accountId = $('#selAccounts').find(":selected").val();
 	console.log("fuuuuuuuuuuu" + accountId)
 	$.ajax({

@@ -5,7 +5,7 @@ var currentUserType = "";
 $(document).ready(function() {
 	currentUserId = sessionStorage.getItem("id");
 	loggedInUsername = sessionStorage.getItem("username");
-	currentUserType = sessionStorage.getItem("currentUserType");
+	currentUserType = sessionStorage.getItem("userRole");
 	/*$("#advancedSearch").hide();
 	$( "#showAdvSrch" ).click(function() {
 		$("#advancedSearch").show();
@@ -16,6 +16,7 @@ $(document).ready(function() {
 
 
 function searchAll(){
+	var token = localStorage.getItem("token");
 	console.log("SEARCH ALL");
 	var field = $('#tipField').find(":selected").val();
 	var value=$("#value").val().trim();
@@ -25,7 +26,8 @@ function searchAll(){
 		}
 	$.ajax({
 		type: 'get',
-		url: "http://localhost:8080/elasticsearch/search-contacts/",
+		url: "https://localhost:8080/elasticsearch/search-contacts/",
+		headers:{Authorization:"Bearer " + token},
 		data : data,
 		cache: false,
 		contentType: 'application/json',
@@ -74,10 +76,12 @@ function searchFunction(){
 }
 
 function search(value){
+	var token = localStorage.getItem("token");
 	console.log("SEARCH + VALUE");
 	$.ajax({
 		type: 'get',
-		url: "http://localhost:8080/elasticsearch/search/" + value,
+		url: "https://localhost:8080/elasticsearch/search/" + value,
+		headers:{Authorization:"Bearer " + token},
 		cache: false,
 		contentType: 'application/json',
 		success: function(response){
@@ -93,6 +97,7 @@ function search(value){
 		}
 
 function initContacts(contacts){
+	
 	var usersDiv = $("#usersDiv1");
 	usersDiv.empty();
 	console.log(contacts)
@@ -135,7 +140,7 @@ var data = {
 //var data = JSON.stringify({"firstName":value, "userId":currentUserId});
 $.ajax({
 	type: 'get',
-	url: "http://localhost:8080/elasticsearch/search/searchByFirstName/" + currentUserId + "/" + value,
+	url: "https://localhost:8080/elasticsearch/search/searchByFirstName/" + currentUserId + "/" + value,
 	cache: false,
 	contentType: 'application/json',
 	success: function(response){
@@ -151,6 +156,7 @@ $.ajax({
 */
 
 function booleanSearch(){
+	var token = localStorage.getItem("token");
 	var field1= $("#field1").val();
 	var value1=$("#value1").val().trim();
 	var field2= $("#field2").val();
@@ -164,7 +170,8 @@ function booleanSearch(){
 	var data = JSON.stringify({"field1":field1, "value1":value1, "field2":field2, "value2":value2 , "operation":operation});
 	$.ajax({
 	        type: "POST",
-	        url: "http://localhost:8080/elasticsearch/search/contactBool" ,
+	        url: "https://localhost:8080/elasticsearch/search/contactBool" ,
+	        headers:{Authorization:"Bearer " + token},
 	        data: data,
 	        contentType: 'application/json',
 	        success: function (response) {
@@ -206,13 +213,15 @@ function searchMultiMatch(){
 }
 
 function elasticMultiMatch(path){
+	var token = localStorage.getItem("token");
 	console.log("MULTI MATCH + DATA i value je " + value + "i path je " + path)
 	var data = new FormData();
 	data.append('fuzzy', value)
 	console.log("data je " + data)
 	$.ajax({
 		type: 'post',
-		url: "http://localhost:8080/elasticsearch/search/" + path,
+		url: "https://localhost:8080/elasticsearch/search/" + path,
+		headers:{Authorization:"Bearer " + token},
 		 contentType: false,
 	       data: data,
 	       cache: false,

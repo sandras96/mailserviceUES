@@ -10,6 +10,9 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 /*import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;*/
 
@@ -21,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity(name = "eUser")
 @Table(name = "euser")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class User implements Serializable/* , UserDetails */{
+public class User implements Serializable, UserDetails {
 	
 	
 	/**
@@ -29,7 +32,6 @@ public class User implements Serializable/* , UserDetails */{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public enum UserType {ADMIN, USER}
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id", nullable = false, unique = true)
@@ -66,10 +68,12 @@ public class User implements Serializable/* , UserDetails */{
 	private String lastname;
 	
 	
-	@Enumerated(EnumType.STRING)
-	@Column(name="user_type", unique=false, nullable=false)
-	private UserType userType;
-	
+	@ManyToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
+	@JoinTable(name="user_authority",
+			joinColumns=@JoinColumn(name="user_id",referencedColumnName="user_id"),
+			inverseJoinColumns = @JoinColumn(name="authority_id",referencedColumnName="id"))
+	@JsonIgnore
+	private Set<Authority> user_authorities = new HashSet<>();
 	
 
 
@@ -88,14 +92,6 @@ public class User implements Serializable/* , UserDetails */{
 		this.password = password;
 	}
 
-
-
-
-
-
-
-
-
 	public User(Long id, List<Account> accounts, List<Contact> contacts, List<Tag> tags, String username, String password,
 			String firstname, String lastname) {
 		super();
@@ -111,20 +107,6 @@ public class User implements Serializable/* , UserDetails */{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	public User(String firstname, String lastname, String username, String password) {
 		this.username = username;
 		this.password = password;
@@ -132,99 +114,44 @@ public class User implements Serializable/* , UserDetails */{
 		this.lastname = lastname;
 	}
 
-
-
-
-
-
-
 	public Long getId() {
 		return id;
 	}
-
-
-
-
 
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-
-
-
-
-
 	public String getUsername() {
 		return username;
 	}
-
-
-
-
-
 
 	public void setUsername(String username) {
 		this.username = username;
 	}
 
 
-
-
-
-
-	public String getPassword() {
-		return password;
-	}
-
-
-
-
-
-
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-
-
-
-
 
 	public String getFirstname() {
 		return firstname;
 	}
 
-
-
-
-
-
 	public void setFirstname(String firstname) {
 		this.firstname = firstname;
 	}
-
-
-
-
-
 
 	public String getLastname() {
 		return lastname;
 	}
 
 
-
-
-
-
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
-
-
-
 
 
 
@@ -260,37 +187,68 @@ public class User implements Serializable/* , UserDetails */{
 	}
 
 
+	@JsonIgnore
+	public Set<Authority> getUser_authorities() {
+		return user_authorities;
+	}
+	@JsonIgnore
+	public String getauthorities() {
+		String autority= null;
+        for (GrantedAuthority s : user_authorities ) {
+            
+            autority = s.getAuthority();
+            
+        }
+		
+		return autority;
+	}
 
-	public UserType getUserType() {
-		return userType;
+
+	public void setUser_authorities(Set<Authority> user_authorities) {
+		this.user_authorities = user_authorities;
 	}
 
 
 
-	public void setUserType(UserType userType) {
-		this.userType = userType;
+	@Override
+	 public Collection<? extends GrantedAuthority> getAuthorities() {
+		 return this.user_authorities;
+	 }
+
+
+	@JsonIgnore
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@JsonIgnore
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@JsonIgnore
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
 	}
 
 
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 
-    
-	/*
-	 * @Override public Collection<? extends GrantedAuthority> getAuthorities() {
-	 * return this.userAuthorities; }
-	 * 
-	 * 
-	 * 
-	 * @Override public boolean isAccountNonExpired() { return true; }
-	 * 
-	 * 
-	 * @Override public boolean isAccountNonLocked() { return true; }
-	 * 
-	 * 
-	 * @Override public boolean isCredentialsNonExpired() { return true; }
-	 * 
-	 * 
-	 * @Override public boolean isEnabled() { return true; }
-	 */
+
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return password;
+	}
+	
+	
 	
 	
 	

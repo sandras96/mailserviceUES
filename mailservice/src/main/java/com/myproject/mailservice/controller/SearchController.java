@@ -382,7 +382,7 @@ public class SearchController {
 		  	} 
 		  
 		  List<MessageDTO> messagesDTO = new ArrayList<MessageDTO>();
-		  List<Message> messages1 = messageRepo.findBySubject(CyirilLatinConverter.cir2lat(subject));
+		  List<Message> messages1 = messageRepo.findBySubjectContaining(CyirilLatinConverter.cir2lat(subject));
 	  
 		  for(Message m: messages1) { 
 			  	m.setAccount(accountRepository.getOne(id));

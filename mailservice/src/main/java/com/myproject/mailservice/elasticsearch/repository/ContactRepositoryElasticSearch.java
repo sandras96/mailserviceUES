@@ -14,7 +14,21 @@ public interface ContactRepositoryElasticSearch extends ElasticsearchRepository<
 	List<Contact> findByfirstname(String firstName);
 	List<Contact> findBylastname(String lastName);
 	
-	@Query("{\"multi_match\": {\"query\": \"?0\", \"fields\": [\"firstName\", \"lastName\"], \"fuzziness\": \"AUTO\"}, \"highlight\" : {\"fields\": [\"firstName\" : {}, \"lastName\", \"note\"]}}")
+	@Query("{" + 
+			"    \"query\": {" + 
+			"        \"multi_match\": {" + 
+			"            \"query\": " + 
+			"                \"mag\", " + 
+			"                \"fields\": [" + 
+			"                    \"firstname\", " + 
+			"                    \"lastname\", " + 
+			"                    \"note\"" + 
+			"                ], " + 
+			"                \"fuzziness\": " + 
+			"                    \"AUTO\"" + 
+			"        }" + 
+			"    }" + 
+			"}")
 	List<Contact> findFuzzy(String q);
 	
 	@Query("{\"simple_query_string\" : {\"query\": \"?0\" , \"fields\": [ \"firstName\", \"lastName\"], \"default_operator\": \"and\"}}")

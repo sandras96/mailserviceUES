@@ -1,8 +1,15 @@
-insert into euser (user_firstname, user_lastname, user_password, user_username, user_type) values ("sandra", "stojanovic", "s", "sakica", "ADMIN");
-insert into euser (user_firstname, user_lastname, user_password, user_username, user_type) values ("nela", "milojevic", "n", "nekica", "ADMIN");
-insert into euser (user_firstname, user_lastname, user_password, user_username, user_type) values ("marko", "cvijovic", "m", "make", "USER");
-insert into euser (user_firstname, user_lastname, user_password, user_username, user_type) values ("nikola", "spasojevic", "sake", "sake", "USER");
+insert into euser (user_firstname, user_lastname, user_password, user_username) values ("sandra", "stojanovic", "$2a$04$bAsNVI05EjajIzH4AHFdu.RimWMl2K5hmnzeBrcqRX7Cm8BtMgIFK", "sakica");
+insert into euser (user_firstname, user_lastname, user_password, user_username) values ("nela", "milojevic", "$2a$04$bAsNVI05EjajIzH4AHFdu.RimWMl2K5hmnzeBrcqRX7Cm8BtMgIFK", "nekica");
+insert into euser (user_firstname, user_lastname, user_password, user_username) values ("marko", "cvijovic", "$2a$04$bAsNVI05EjajIzH4AHFdu.RimWMl2K5hmnzeBrcqRX7Cm8BtMgIFK", "make");
+insert into euser (user_firstname, user_lastname, user_password, user_username) values ("nikola", "spasojevic", "$2a$04$bAsNVI05EjajIzH4AHFdu.RimWMl2K5hmnzeBrcqRX7Cm8BtMgIFK", "sake");
 
+INSERT INTO authority(name)VALUES('ADMIN');
+INSERT INTO authority(name)VALUES('USER');
+
+INSERT INTO user_authority(user_id,authority_id)VALUES(1,1);
+INSERT INTO user_authority(user_id,authority_id)VALUES(2,1);
+INSERT INTO user_authority(user_id,authority_id)VALUES(3,2);
+INSERT INTO user_authority(user_id,authority_id)VALUES(4,2);
 
 insert into contact (contact_display_name, contact_email, contact_firstname, contact_lastname, contact_note, user_id) values ("megs", "megs@gmail.com", "magdalena", "salipur", "cimsss", 1);
 insert into contact (contact_display_name, contact_email, contact_firstname, contact_lastname, contact_note, user_id) values ("liki", "liki@gmail.com", "lidija", "salipur", "djiki", 1);

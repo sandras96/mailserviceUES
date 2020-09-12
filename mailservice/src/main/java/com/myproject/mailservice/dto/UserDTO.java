@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.myproject.mailservice.entity.Account;
 import com.myproject.mailservice.entity.User;
-import com.myproject.mailservice.entity.User.UserType;
 
 
 public class UserDTO implements Serializable {
@@ -22,23 +21,23 @@ public class UserDTO implements Serializable {
 	private String password;
 	private String firstname;
 	private String lastname;
+	private String authority;
 	private List<AccountDTO> accounts;
-	private UserType userType;
 	
 	
 	
-	public UserDTO(Long id, String username, String password, String firstname, String lastname,UserType userType) {
+	public UserDTO(Long id, String username, String password, String firstname, String lastname, String authority) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.firstname = firstname;
 		this.lastname = lastname;
-		this.userType = userType;
+		this.authority = authority;
 	}
 
 	public UserDTO(User user) {
-		this(user.getId(), user.getUsername(),user.getPassword(),user.getFirstname(), user.getLastname(), user.getUserType());
+		this(user.getId(), user.getUsername(),user.getPassword(),user.getFirstname(), user.getLastname(), user.getauthorities());
 	}
 	
 	public static List<AccountDTO> getAccoutnForUser(List<Account> acc){
@@ -115,7 +114,13 @@ public class UserDTO implements Serializable {
 	
 	
 
+	public String getAuthority() {
+		return authority;
+	}
 
+	public void setAuthority(String authority) {
+		this.authority = authority;
+	}
 
 	public List<AccountDTO> getAccounts() {
 		return accounts;
@@ -127,13 +132,6 @@ public class UserDTO implements Serializable {
 		this.accounts = accounts;
 	}
 
-	public UserType getUserType() {
-		return userType;
-	}
-
-	public void setUserType(UserType userType) {
-		this.userType = userType;
-	}
 
 
 

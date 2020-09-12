@@ -9,10 +9,10 @@ import com.myproject.mailservice.entity.Message;
 
 public interface MessageRepositoryElasticSearch extends ElasticsearchRepository<Message, Integer> {
 	
-	List<Message> findBySubject(String subject);
+	List<Message> findBySubjectContaining(String subject);
 //	List<Message> findBySender(String from);
 	List<Message> findByFrom(String from);
-//	List<Message> findByContent(String content);
+//	List<Message> findBySubjectContaining(String content);
 	
 	@Query("{\"multi_match\": {\"query\": \"?0\", \"fields\": [\"subject\", \"from\", \"to\", \"content\"], \"fuzziness\": \"AUTO\"}}")
 	List<Message> findFuzzyMessage(String q);
