@@ -105,12 +105,32 @@ public class ContactController {
 			if(contact == null) {
 				return new ResponseEntity<ContactDTO>(HttpStatus.BAD_REQUEST);
 			}
+			
+			if(contactDTO.getDisplayName().equals("")) {
+				contact.setDisplayName(contact.getDisplayName());
+			}else {
 				contact.setDisplayName(contactDTO.getDisplayName());
+				}
+			if(contactDTO.getEmail().equals("")) {
+				contact.setEmail(contact.getEmail());
+			}else {
 				contact.setEmail(contactDTO.getEmail());
+				}
+			if(contactDTO.getFirstname().equals("")) {
+				contact.setFirstname(contact.getFirstname());
+			}else {
 				contact.setFirstname(contactDTO.getFirstname());
+				}
+			if(contactDTO.getLastname().equals("")) {
+				contact.setLastname(contact.getLastname());
+			}else {
 				contact.setLastname(contactDTO.getLastname());
+				}
+			if(contactDTO.getText().equals("")) {
+				contact.setText(contact.getText());
+			}else {
 				contact.setText(contactDTO.getText());
-				
+				}
 				contact = contactService.save(contact);
 				return new ResponseEntity<ContactDTO>(new ContactDTO(contact), HttpStatus.OK);
 			

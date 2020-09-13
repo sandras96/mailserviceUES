@@ -114,11 +114,6 @@ function editContact(){
 	var editLastname = $('#editLastname').val();
 	var editNote = $('#editNote').val();
 	var valEditButton = $("#buttonEdit").val();
-	if(editDisplayname == "" || editEmail == "" || editFirstname == "" || editLastname == "" || editNote == ""){
-		alert("Please fill all fields.")
-		return null;
-	}
-	
 	
 	var data = {
 			'displayName' : editDisplayname,

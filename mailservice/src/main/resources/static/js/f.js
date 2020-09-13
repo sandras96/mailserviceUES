@@ -1,52 +1,101 @@
 var currentUserId = "";
-var loggedInUsername = "";
 var currentUserType = "";
+var token = "";
 
 
 $(document).ready(function(){
-	var loginButton = $('#loginButton');
-	loginButton.show();
-	var registerButton = $('#registerButton');
-	registerButton.show();
-	var logoutButton = $('#logoutButton');
-	logoutButton.hide();
-	$("#contactsButton").hide();
-	$("#accountsButton").hide();
-	$("#mailsButton").hide();
-	$('#contactsAllButton').hide();
-	
 	loginStatus();
-	
 	$('.pass_show').append('<span class="ptxt">Show</span>');  
 });
 
 function loginStatus(){
 	currentUserId = sessionStorage.getItem("id");
-	loggedInUsername = sessionStorage.getItem("username");
 	currentUserType = sessionStorage.getItem("userRole");
+	token = localStorage.getItem("token");
+	
 	console.log("currentUserId: "+currentUserId);
-	console.log("usrname: " + loggedInUsername);
 	console.log("currentUserType: " + currentUserType);
+	
 	if(currentUserId!= "null"){
-//	loadAccounts(currentUserId);
-//	loadContacts(currentUserId);
-	$("#loggedInUsr").text("LoggedInUser: " +loggedInUsername);
+		console.log("currentUserId nije null")
 	$('#logoutButton').show();
 	$("#contactsButton").show();
 	$("#accountsButton").show();
+	$('#profileButton').show();
 	$("#mailsButton").show();
 	$('#loginButton').hide();
 	$('#registerButton').hide();
+	
 	if(currentUserType == "ADMIN"){
 		$('#contactsAllButton').show();
+		}
+	
+	}else{
+		console.log("currentUserId jeste null")
+		$('#loginButton').show();
+		$('#registerButton').show();
+		$('#logoutButton').hide();
+		$("#contactsButton").hide();
+		$("#accountsButton").hide();
+		$("#mailsButton").hide();
+		$('#contactsAllButton').hide();
+		$('#profileButton').hide();
+		}
+	}
+
+function loginAuth(){
+	var username =  $('#inputUsername').val().trim();
+	var password = $('#inputPassword').val().trim();
+	if(username=="" || password==""){
+		alert("Please fill all fields.")
+		return;
 	}
 	
+	var data = {
+			'username':username,
+			'password':password
 	}
-	}
+	console.log(data);
+	console.log("usao u login()");
+
+	$.ajax({
+		type: 'POST',
+		contentType: 'application/json',
+        url: 'https://localhost:8080/api/auth/login',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        crossDomain: true,
+		cache: false,
+		processData: false,
+		success:function(response){
+			if (typeof(Storage) !== "undefined") {
+        	    console.log(response);
+        	    token = response.access_token;
+        	    localStorage.setItem("token",token);
+        	    console.log(token);
+				sessionStorage.setItem("id", response.userId);
+        	    username = response.username;
+        	    sessionStorage.setItem("userRole", response.userAutority);
+        	    console.log(response.userAutority);
+        	    window.location.href = "index.html";
+        	} else {
+        	    alert("Sorry, your browser does not support Web Storage...");
+        	}
+        	//location.reload(); 
+        },
+		error: function (jqXHR, textStatus, errorThrown) {  
+			if(jqXHR.status="404"){
+				alert("User does not exist.");
+			}
+			
+		}
+	});
+
+}
+
 
 function logout(){
     sessionStorage.setItem("id", null);
-    sessionStorage.setItem("username", null);
     sessionStorage.setItem("userRole", null);
     localStorage.setItem("token", null);
     window.location.href = "index.html";
@@ -96,55 +145,6 @@ function signUp(){
 }
 
 
-function loginAuth(){
-	var username =  $('#inputUsername').val().trim();
-	var password = $('#inputPassword').val().trim();
-	if(username=="" || password==""){
-		alert("Please fill all fields.")
-		return;
-	}
-	
-	var data = {
-			'username':username,
-			'password':password
-	}
-	console.log(data);
-	console.log("usao u login()");
-
-	$.ajax({
-		type: 'POST',
-		contentType: 'application/json',
-        url: 'https://localhost:8080/api/auth/login',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        crossDomain: true,
-		cache: false,
-		processData: false,
-		success:function(response){
-			if (typeof(Storage) !== "undefined") {
-        	    console.log(response);
-        	    token = response.access_token;
-        	    localStorage.setItem("token",token);
-        	    console.log(token);
-				sessionStorage.setItem("id", response.userId);
-        	    username = response.username;
-        	    sessionStorage.setItem("userRole", response.userAutority);
-        	    console.log(response.userAutority);
-        	    window.location.href = "index.html";
-        	} else {
-        	    alert("Sorry, your browser does not support Web Storage...");
-        	}
-        	//location.reload(); 
-        },
-		error: function (jqXHR, textStatus, errorThrown) {  
-			if(jqXHR.status="404"){
-				alert("User does not exist.");
-			}
-			location.reload(); 
-		}
-	});
-
-}
 
 function showMyProfile(){
 	var token = localStorage.getItem("token");
