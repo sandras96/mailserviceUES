@@ -37,7 +37,7 @@ public class Message implements Serializable{
 	
 	
 	
-	public static final String INDEX_NAME = "messagesall1";
+	public static final String INDEX_NAME = "messagesss1";
 	public static final String TYPE_NAME = "message";
 	
 	public static final String DATE_PATTERN = "yyyy-MM-dd";
@@ -74,9 +74,7 @@ public class Message implements Serializable{
 	
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonIgnore
 	@JoinColumn(name = "account_id")
-	@Field(type = FieldType.Keyword, store = false)
 	private Account account;
 	
 	
@@ -128,13 +126,12 @@ public class Message implements Serializable{
 		super();
 	}
 
-	public Message(Long id, List<Tag> tags, Set<Attachment> attachments, Account account, Folder folder, String from,
+	public Message(Long id, List<Tag> tags, Set<Attachment> attachments, Folder folder, String from,
 			String to, String cc, String bcc, Timestamp dateTime, String subject, String content, boolean unread) {
 		super();
 		this.id = id;
 		this.tags = tags;
 		this.attachments = attachments;
-		this.account = account;
 		this.folder = folder;
 		this.from = from;
 		this.to = to;
@@ -152,7 +149,7 @@ public class Message implements Serializable{
 
 
 	public Message(String from, String to, String cc, String bcc, Timestamp dateTime, String subject,
-			String content, boolean unread, Account account) {
+			String content, boolean unread) {
 		super();
 		this.from = from;
 		this.to = to;
@@ -162,7 +159,7 @@ public class Message implements Serializable{
 		this.subject = subject;
 		this.content = content;
 		this.unread = unread;
-		this.account = account;
+		
 	}
 
 

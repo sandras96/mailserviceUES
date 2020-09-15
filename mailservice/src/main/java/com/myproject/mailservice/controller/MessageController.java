@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.mailservice.dto.AccountDTO;
 import com.myproject.mailservice.dto.MessageDTO;
+import com.myproject.mailservice.elasticsearch.repository.MessageRepositoryElasticSearch;
 import com.myproject.mailservice.entity.Account;
 import com.myproject.mailservice.entity.Message;
+import com.myproject.mailservice.service.AccountInterface;
 import com.myproject.mailservice.service.MessageInterface;
 
 @RestController
@@ -25,7 +27,13 @@ import com.myproject.mailservice.service.MessageInterface;
 public class MessageController {
 
 	@Autowired
+	private AccountInterface accountService;
+	
+	@Autowired
 	private MessageInterface messageService;
+	
+	@Autowired(required=true)
+	private MessageRepositoryElasticSearch messageRepo;
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
@@ -81,9 +89,9 @@ public class MessageController {
 			}
 		}
 	 
-	 @GetMapping(value = "/account/orderbysubject/{id}")
+	 @GetMapping(value = "/orderbysubject/{id}")
 	    public ResponseEntity<List<MessageDTO>> getMessagesSortBySubject(@PathVariable("id")Long id){
-		 	logger.info("GET Method, request for all messages sorted by subject from account with id: " + id);
+		 	logger.info("GET Method, request for all messages sorted by subject from user with id: " + id );
 	        List<Message> messages=messageService.findBySubject(id);
 	        List<MessageDTO> messagesDTO=new ArrayList<>();
 	        for (Message message : messages) {
@@ -92,9 +100,9 @@ public class MessageController {
 	        return new ResponseEntity<List<MessageDTO>>(messagesDTO,HttpStatus.OK);
 	    }
 	 
-	 @GetMapping(value = "/account/orderbysender/{id}")
+	 @GetMapping(value = "/orderbysender/{id}")
 	    public ResponseEntity<List<MessageDTO>> getMessagesSortBySender(@PathVariable("id")Long id){
-		 	logger.info("GET Method, request for all messages sorted by sender from account with id: " + id);
+		 	logger.info("GET Method, request for all messages sorted by sender from user with id: " + id);
 	        List<Message> messages=messageService.findBySender(id);
 	        List<MessageDTO> messagesDTO=new ArrayList<>();
 	        for (Message message : messages) {
@@ -103,9 +111,9 @@ public class MessageController {
 	        return new ResponseEntity<List<MessageDTO>>(messagesDTO,HttpStatus.OK);
 	    }
 	 
-	 @GetMapping(value = "/account/orderbydatetime/{id}")
+	 @GetMapping(value = "/orderbydatetime/{id}")
 	    public ResponseEntity<List<MessageDTO>> getMessagesSortByDatetime(@PathVariable("id")Long id){
-		 	logger.info("GET Method, request for all messages sorted by datetitme from account with id: " + id);
+		 	logger.info("GET Method, request for all messages sorted by datetitme from user with id: " + id);
 	        List<Message> messages=messageService.findByDatetime(id);
 	        List<MessageDTO> messagesDTO=new ArrayList<>();
 	        for (Message message : messages) {
@@ -113,4 +121,18 @@ public class MessageController {
 	        }
 	        return new ResponseEntity<List<MessageDTO>>(messagesDTO,HttpStatus.OK);
 	    }
+	 
+		/*
+		 * @GetMapping(value = "/account/orderbysubject/{id}") public
+		 * ResponseEntity<List<MessageDTO>>
+		 * getMessagesSortBySubject(@PathVariable("id")Long id){ logger.
+		 * info("GET Method, request for all messages sorted by subject from account with id: "
+		 * + id); System.out.println("ID JE" + id); List<Message>
+		 * messages=messageRepo.findByAccountOrderBySubjectAsc(id);
+		 * System.out.println("LISTA PORUKA JE "); List<MessageDTO> messagesDTO=new
+		 * ArrayList<>(); for (Message message : messages) {
+		 * message.setAccount(accountService.getOne(id)); messagesDTO.add(new
+		 * MessageDTO(message)); } return new
+		 * ResponseEntity<List<MessageDTO>>(messagesDTO,HttpStatus.OK); }
+		 */
 }

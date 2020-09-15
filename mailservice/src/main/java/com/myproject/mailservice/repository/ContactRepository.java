@@ -16,7 +16,5 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
 	Contact getByDisplayName(String displayName);
 	List<Contact> findContactsByEuserId(Long id);
 	
-	@Query(value="SELECT * FROM contact WHERE contact_note LIKE ?", nativeQuery = true)
-	List<Contact> findBynote(String text);
 	
 }

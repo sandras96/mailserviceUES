@@ -73,11 +73,6 @@ public class MessageService implements MessageInterface{
 		return messageRepository.findAllSortByDatetime(id);
 	}
 
-	@Override
-	public List<Message> findByContent(String parameter, Long id) {
-		// TODO Auto-generated method stub
-		return messageRepository.findByContent(parameter, id);
-	}
 
 	@Override
 	public List<Message> findByTags_IdAndAccountId(Long tagId, Long accountId) {

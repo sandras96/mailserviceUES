@@ -24,7 +24,8 @@ function loadContacts(userId){
 		headers:{Authorization:"Bearer " + token},
 		cache: false,
 		success: function(response){
-			for(var i=0; i<response.length; i++){
+			initContacts(response);
+			/*for(var i=0; i<response.length; i++){
 				contact = response[i];
 				contactId = contact.id;
 				console.log("contacttt" + response)
@@ -54,7 +55,8 @@ function loadContacts(userId){
 							usersDiv.append(tableRow);
 							
 							
-						}
+						}*/
+						
 					},
 					error: function (jqXHR, textStatus, errorThrown) {  
 						if(jqXHR.status=="404"){
@@ -299,14 +301,7 @@ function appendPhoto(photo,id){
 	var divColumn = $('<div class="col-md-6"></div>');
 	var divThumbnail = $('<div class="thumbnail"></div>');
 	var contactPhoto = 'data:image/gif;base64,'+photo.pic;
-	/*var img1 = document.createElement("img");
-	var divThumbnail = document.createElement("div");
-	divThumbnail.setAttribute('class', 'thumbnail');
-	img1.setAttribute('src', contactPhoto);*/
-//	divThumbnail.appendChild(img1);
 	var img = $('<img src="' + contactPhoto + '" alt="Lights" style="width:100%">');
-	//var button = $('<button type="button" class=" btn btn-xs glyphicon glyphicon-remove" style="float:right" value="'+photo.id+'"></button>');
-	//divThumbnail.append(button)
 	divThumbnail.append(img);
 	
 	divColumn.append(divThumbnail);
@@ -314,3 +309,120 @@ function appendPhoto(photo,id){
 	
 }
 
+function booleanSearch(){
+	var token = localStorage.getItem("token");
+	var field1= $("#field1").val();
+	var value1=$("#value1").val().trim();
+	var field2= $("#field2").val();
+	var value2=$("#value2").val().trim();
+	var operation=$("#operation").val();
+	console.log(value1 + value2);
+	if(value1 == "" || value2 == "" ){
+		alert("All fields must be filled.");
+		return;
+	}
+	var data = JSON.stringify({"field1":field1, "value1":value1, "field2":field2, "value2":value2 , "operation":operation});
+	$.ajax({
+	        type: "POST",
+	        url: "https://localhost:8080/elasticsearch/search/contactBool" ,
+	        headers:{Authorization:"Bearer " + token},
+	        data: data,
+	        contentType: 'application/json',
+	        success: function (data) {
+	            console.log("SUCCESS : ", data);
+	        },
+	        error: function (e) {
+	        	
+	        	alert(e);
+
+	        }
+	    });
+}
+function searchica(){
+	console.log("srcicaaa")
+	searchFunction();
+}
+
+function searchFunction(){
+	console.log("ON CHANGE SELECT")
+	 var typeField = $("#tipField").val();
+	 var value =$("#value").val().trim().toLowerCase();
+	 console.log("valuee je " + value)
+	 if(typeField == "FIRSTNAME"){
+		 if(value==""){
+			 loadContacts(currentUserId);
+		 }else{
+			 search("searchByFirstName/"+value)
+		 }
+	 }else if(typeField == "LASTNAME"){
+		 if(value == ""){
+			 loadContacts(currentUserId)
+		 }else{
+			 search("searchByLastName/" + value);
+		 }
+	 }else if(typeField == "NOTE"){
+		 if(value == ""){
+			 loadContacts(currentUserId)
+		 }else{
+			 search("searchByNote/" + value)
+		 }
+	 }
+
+}
+
+function search(value){
+	var token = localStorage.getItem("token");
+	console.log("SEARCH + VALUE");
+	$.ajax({
+		type: 'get',
+		url: "https://localhost:8080/elasticsearch/search/" + value + "/" + currentUserId,
+		headers:{Authorization:"Bearer " + token},
+		cache: false,
+		contentType: 'application/json',
+		success: function(response){
+			initContacts(response);
+			console.log(response)
+		},
+					error: function (jqXHR, textStatus, errorThrown) {  
+						if(jqXHR.status=="404"){
+							alert(textStatus, errorThrown);
+						}
+					}
+				});
+		}
+
+function initContacts(contacts){
+	
+	var usersDiv = $("#usersDiv1");
+	usersDiv.empty();
+	console.log(contacts)
+	for(var i=0; i<contacts.length; i++){
+		contact = contacts[i];
+		contactId = contact.id;
+		console.log("contacttt" + contact.firstname)
+		
+		var tableRow= $('<tr></tr>');
+		var img = $('<td><div><button type="button" class="btn btn-link btn-lg" data-toggle="modal" data-target="#showPicturesModal">'
+				+'<span class="glyphicon glyphicon-user" style="color: black" value="'+contactId+'" onClick="showPicturesModal('+contactId+')"></span><span style="color: black"></span>'
+			+'</button></div></td>');
+		var displayName = $('<td>'+contact.displayName+'</td>');
+		var firstname = $('<td>'+contact.firstname+'</td>');
+		var lastname = $('<td>'+contact.lastname+'</td>');
+		var email = $('<td>'+contact.email+'</td>');
+		var note = $('<td>'+contact.text+'</td>');
+		var btnRemove= $('<td><button type="button" onClick="deleteContact('+contactId+')" class="removeUser btn btn-xs" value="'+contactId+'"><span class="glyphicon glyphicon-remove"></span></button></td>')
+		var btnEdit= $('<td><button type="button" data-toggle="modal" data-target="#editUserModal" onClick="editContactModal('+contactId+')" class="editUser btn btn-xs"><span class="glyphicon glyphicon-pencil"></span></button></td>')
+		
+		tableRow.append(img);
+		tableRow.append(displayName);
+			tableRow.append(firstname);
+			tableRow.append(lastname);
+			tableRow.append(email);
+			tableRow.append(note);
+			tableRow.append(btnEdit);
+			tableRow.append(btnRemove);
+			usersDiv.append(tableRow);
+					
+					
+				}
+		}

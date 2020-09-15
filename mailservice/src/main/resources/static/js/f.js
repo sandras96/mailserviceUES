@@ -25,11 +25,7 @@ function loginStatus(){
 	$("#mailsButton").show();
 	$('#loginButton').hide();
 	$('#registerButton').hide();
-	
-	if(currentUserType == "ADMIN"){
-		$('#contactsAllButton').show();
-		}
-	
+
 	}else{
 		console.log("currentUserId jeste null")
 		$('#loginButton').show();
@@ -42,6 +38,26 @@ function loginStatus(){
 		$('#profileButton').hide();
 		}
 	}
+/*function getAllMessages(){
+	console.log("getAllMessages")
+	var token = localStorage.getItem("token");
+	$.ajax({
+		type: 'get',
+		url: "https://localhost:8080/elasticsearch/search-messages/",
+		headers:{Authorization:"Bearer " + token},
+		dataType: 'json',
+		cache: false,
+		success: function(response){
+			 console.log("PORUKEEE" + response.length)
+			
+		},
+		error: function (jqXHR, textStatus, errorThrown) {  
+			if(jqXHR.status=="404"){
+				alert(textStatus, errorThrown);
+			}
+		}
+	});
+}*/
 
 function loginAuth(){
 	var username =  $('#inputUsername').val().trim();

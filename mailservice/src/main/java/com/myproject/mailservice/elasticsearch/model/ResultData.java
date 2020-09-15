@@ -6,17 +6,16 @@ public class ResultData {
 	private String title;
 	private String keywords;
 	private String location;
-	private String highlight;
 	
 	public ResultData() {
 		super();
 	}
-	public ResultData(String title, String keywords, String location, String highlight) {
+	public ResultData(String title, String keywords, String location) {
 		super();
 		this.title = title;
 		this.keywords = keywords;
 		this.location = location;
-		this.highlight = highlight;
+	
 	}
 	public String getTitle() {
 		return title;
@@ -36,12 +35,5 @@ public class ResultData {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	public String getHighlight() {
-		return highlight;
-	}
-	public void setHighlight(String highlight) {
-		this.highlight = highlight;
-	}
-	
 	
 }

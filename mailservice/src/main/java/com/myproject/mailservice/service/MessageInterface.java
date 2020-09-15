@@ -17,7 +17,6 @@ public interface MessageInterface {
 	List<Message> findBySubject(Long id);
 	List<Message> findBySender(Long id);
 	List<Message> findByDatetime(Long id);
-	List<Message> findByContent(String parameter, Long id);
 	List<Message> findByTags_IdAndAccountId(Long tagId, Long accountId);
 	List<Message> findByTags_IdAndEuserId(Long tagId, Long userId);
 	List<Message> findMessagesByEuserId(Long id);

@@ -15,5 +15,4 @@ public interface ContactInterface {
 	Contact edit(ContactDTO contact,Long id);
 	void delete(Long id);
 	List<Contact> getAll();
-	List<Contact> findBynote(String parameter);
 }

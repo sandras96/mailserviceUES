@@ -1,13 +1,9 @@
 package com.myproject.mailservice.elasticsearch.search;
 
-
 import java.util.ArrayList;
 
 import java.util.List;
 
-import org.apache.lucene.search.BooleanQuery.Builder;
-import org.apache.lucene.search.Query;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,30 +13,27 @@ import com.myproject.mailservice.elasticsearch.repository.ContactRepositoryElast
 import com.myproject.mailservice.entity.Contact;
 
 
-
-
 @Service
 public class ResultRetriever {
 
 	@Autowired
 	private ContactRepositoryElasticSearch contactRepository;
 
-	@Autowired
-	private GeneralSearchService generalSearchService;
 	public ResultRetriever(){
 	}
 
-	public  List<ResultData> getResults(org.elasticsearch.index.query.QueryBuilder query, List<RequiredHighlight> requiredHighlights) {
+	public List<ResultData> getResults(org.elasticsearch.index.query.QueryBuilder query,
+		List<RequiredHighlight> requiredHighlights) {
 		if (query == null) {
 			return null;
 		}
-		System.out.println("kveri jeeee " + query + requiredHighlights.size());
+
 		List<ResultData> results = new ArrayList<ResultData>();
-		System.out.println("sta vratiss" + contactRepository.search(query));
+		     System.out.println("Sta vratisssss" + contactRepository.search(query));
 		     
-	    for (Contact contact : contactRepository.search(query)) {
-	    	System.out.println("hejhejjj" + contactRepository.search(query).toString());
-	        results.add(new ResultData(contact.getFirstname(), contact.getLastname(), contact.getNote(), ""));
+	    for (Contact indexUnit : contactRepository.search(query)) {
+	    	System.out.println(contactRepository.search(query).toString());
+	        results.add(new ResultData(indexUnit.getFirstname(), indexUnit.getDisplayName(), indexUnit.getNote()));
 		}  
 	
 		return results;
@@ -63,6 +56,11 @@ public class ResultRetriever {
 //		return results;
 //		}
 	
+	/*
+	 * protected DocumentHandler getHandler(String fileName){
+	 * if(fileName.endsWith(".pdf")){ return new PdfHandler(); } else { return null;
+	 * } }
+	 */
 		
 		
 }

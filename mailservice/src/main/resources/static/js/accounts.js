@@ -10,10 +10,8 @@ $(document).ready(function(){
 	loadAccounts(currentUserId);
 	loadMessages(currentUserId);
 	loadTags(currentUserId);
-	$("#sortByMessages").hide();
 	$(".searchAndSelect").hide();
 //	$(".messaging").hide();
-	
 	
 	$("#primary").click(function(){
 		console.log("radi li")
@@ -22,7 +20,7 @@ $(document).ready(function(){
 		$('#selAccounts').prop('selectedIndex',0);
 		$('#tagFilter').prop('selectedIndex',0);
 		$('#sortByMessages').prop('selectedIndex',0);
-		$("#sortByMessages").hide();
+		$("#sortByMessages").show();
 		$(".searchAndSelect").hide();
 		$("#tagFilter").show();
 		loadMessages(currentUserId);
@@ -256,7 +254,7 @@ function searchica(){
 function getAllmessagesByAccountId(){
 	var token = localStorage.getItem("token");
 	var accountId = $('#selAccounts').find(":selected").val();
-	$("#sortByMessages").show();
+	$("#sortByMessages").hide();
 	$("#tagFilter").hide();
 	$(".searchAndSelect").show();
 	$.ajax({
@@ -327,6 +325,7 @@ function searchMessages(v){
 		success: function(response){
 			initMessages(response);
 			console.log(response)
+			
 					},
 					error: function (jqXHR, textStatus, errorThrown) {  
 						if(jqXHR.status=="404"){
@@ -351,12 +350,12 @@ function sortMessages(){
 }
 function getMessagesSortBy(sortby){
 	var token = localStorage.getItem("token");
-	var accountId = $('#selAccounts').find(":selected").val();
+	
 	
 	console.log("account id je " + accountId)
 	$.ajax({
 		type: 'get',
-		url: "https://localhost:8080/mailservice/messages/account/" + sortby +"/"+ accountId,
+		url: "https://localhost:8080/mailservice/messages/" + sortby +"/"+ currentUserId,
 		headers:{Authorization:"Bearer " + token},
 		cache: false,
 		success: function(response){
@@ -583,3 +582,35 @@ function getTags(tags){
 	}
 
 */
+
+
+
+//////////////// search messages by user /////////////////////////
+function searchFunctionByUser(){
+	var token = localStorage.getItem("token");
+	console.log("ON CHANGE SELECT")
+	 var typeField = $("#tipField").val();
+	 var value =$("#value").val().trim().toLowerCase();
+	 var accountId = $('#selAccounts').find(":selected").val();
+	 if(typeField == "SUBJECT"){
+		 if(value==""){
+			getAllmessagesByAccountId();
+		 }else{
+			 searchMessages("searchBySubject/" + accountId + "/" + value);
+		 }
+	 }else if(typeField == "SENDER"){
+		 if(value == ""){
+			 getAllmessagesByAccountId();
+		 }else{
+			 searchMessages("searchBySender/" + accountId + "/" + value);
+		 }
+	 }else if(typeField == "CONTENT"){
+		 if(value == ""){
+			 getAllmessagesByAccountId();
+		 }else{
+			 searchMessages("searchByContent/" + accountId + "/" + value);
+		 }
+	 }
+
+}
+

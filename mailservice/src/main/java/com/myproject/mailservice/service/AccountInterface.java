@@ -22,5 +22,6 @@ public interface AccountInterface {
 	Account getByDisplayName(String displayName);
 	List<Account> findAccountsByEuserId(Long id);
 	Account findByUsername(String username);
+	Long findByMessageId(Long id);
 
 }

@@ -63,11 +63,6 @@ public class ContactService implements ContactInterface {
 	}
 
 
-	@Override
-	public List<Contact> findBynote(String parameter) {
-		// TODO Auto-generated method stub
-		return contactRepository.findBynote(parameter);
-	}
 	
 
 	

@@ -40,6 +40,7 @@ import com.myproject.mailservice.elasticsearch.repository.MessageRepositoryElast
 import com.myproject.mailservice.elasticsearch.search.GeneralSearchService;
 import com.myproject.mailservice.elasticsearch.search.QueryBuilder;
 import com.myproject.mailservice.elasticsearch.search.ResultRetriever;
+import com.myproject.mailservice.entity.Account;
 import com.myproject.mailservice.entity.Contact;
 import com.myproject.mailservice.entity.Message;
 import com.myproject.mailservice.entity.User;
@@ -105,7 +106,7 @@ public class SearchController {
 
 		List<ContactDTO> cDTO = new ArrayList<ContactDTO>();
 		List<Contact> cl = contactRepo.findPhrase(CyirilLatinConverter.cir2lat(phraseQuery));
-
+		
 		for (Contact co : cl) {
 			ContactDTO cD = new ContactDTO(co);
 			cDTO.add(cD);
@@ -113,41 +114,15 @@ public class SearchController {
 		return cDTO;
 	}
 
-	
-	/*
-	 * @GetMapping(value = "/search/searchByFirstName/{id}/{firstName}") public
-	 * Iterable<ContactDTO> searchByFirstName1(@PathVariable("id") Long
-	 * id, @PathVariable("firstName") String firstName) throws Exception {
-	 * 
-	 * System.out.println(firstName + id);
-	 * System.out.println("CONTACTS serach by first name ---------------");
-	 * List<Contact> contacts = contactRepository.findContactsByEuserId(id);
-	 * System.out.println("Kontakti lista jeee" + contacts); for(Contact c :
-	 * contactRepository.findContactsByEuserId(id)) { contactRepo.save(c);
-	 * System.out.println("sacuvao je contact repo " + c); } List<ContactDTO> cDTO =
-	 * new ArrayList<ContactDTO>();
-	 * System.out.println("sacuvao je contact repo broj" + contactRepo.count());
-	 * List<Contact> cl =
-	 * contactRepo.findByfirstname(CyirilLatinConverter.cir2lat(firstName));
-	 * System.out.println("druga jebena lista je " + cl);
-	 * if(contactRepo.existsById(Integer.parseInt(Long.valueOf(id).toString()))) {
-	 * System.out.println("asasdjsjfjds"); }
-	 * 
-	 * for(Contact co: cl) { ContactDTO cD = new ContactDTO(co);
-	 * if(cD.getUser().getId() == id) { cDTO.add(cD); }
-	 * 
-	 * } return cDTO; }
-	 */
-		  
 
-	@GetMapping(value="/search/searchByFirstName/{firstName}")
-	public Iterable<ContactDTO> searchByFirstName(@PathVariable("firstName") String firstName) throws Exception {
-		System.out.println("CONTACTS serach by first name ---------------" + firstName);
+	@GetMapping(value="/search/searchByFirstName/{firstName}/{userId}")
+	public Iterable<ContactDTO> searchByFirstName(@PathVariable("firstName") String firstName, @PathVariable("userId") Long id) throws Exception {
+		System.out.println("CONTACTS serach by first name ---------------" + firstName + "------for user with id: " + id);
 		for(Contact c : contactRepository.findAll()) {
 			contactRepo.save(c);
 		}
 		List<ContactDTO> cDTO = new ArrayList<ContactDTO>();	
-		List<Contact> cl = contactRepo.findByfirstname(CyirilLatinConverter.cir2lat(firstName));
+		List<Contact> cl = contactRepo.findByfirstnameContainingAndEuserId(CyirilLatinConverter.cir2lat(firstName),id);
 		
 		for(Contact co: cl) {
 			ContactDTO cD = new ContactDTO(co);		
@@ -155,14 +130,14 @@ public class SearchController {
 		}		
 		return cDTO;
 	}
-	@GetMapping(value="/search/searchByLastName/{lastName}")
-	public Iterable<ContactDTO> searchByLastName(@PathVariable("lastName") String lastName) throws Exception {
-		System.out.println("CONTACTS serach by Last name ---------------" + lastName);
+	@GetMapping(value="/search/searchByLastName/{lastName}/{userId}")
+	public Iterable<ContactDTO> searchByLastName(@PathVariable("lastName") String lastName, @PathVariable("userId") Long id) throws Exception {
+		System.out.println("CONTACTS serach by Last name ---------------" + lastName + "------for user with id: " + id);
 		for(Contact c : contactRepository.findAll()) {
 			contactRepo.save(c);
 		}
 		List<ContactDTO> cDTO = new ArrayList<ContactDTO>();	
-		List<Contact> cl = contactRepo.findBylastname(CyirilLatinConverter.cir2lat(lastName));
+		List<Contact> cl = contactRepo.findBylastnameContainingAndEuserId(CyirilLatinConverter.cir2lat(lastName), id);
 		
 		for(Contact co: cl) {
 			ContactDTO cD = new ContactDTO(co);		
@@ -170,12 +145,16 @@ public class SearchController {
 		}		
 		return cDTO;
 	}
-	@GetMapping(value="/search/searchByNote/{note}")
-	public Iterable<ContactDTO> searchByNote(@PathVariable("note") String note) throws Exception {
-		System.out.println("CONTACTS serach by NOTE ---------------" + note);
-		note = "%"+note+"%";
-		List<Contact> contacts = contactRepository.findBynote(CyirilLatinConverter.cir2lat(note));
+	@GetMapping(value="/search/searchByNote/{note}/{userId}")
+	public Iterable<ContactDTO> searchByNote(@PathVariable("note") String note, @PathVariable("userId") Long id) throws Exception {
+		System.out.println("CONTACTS serach by NOTE ---------------" + note + "------for user with id: " + id);
+		for(Contact c : contactRepository.findAll()) {
+			contactRepo.save(c);
+		}
+		
 		List<ContactDTO> cDTO = new ArrayList<ContactDTO>();	
+		List<Contact> contacts = contactRepo.findBytextContainingAndEuserId(CyirilLatinConverter.cir2lat(note), id);
+		
 		
 		for(Contact co: contacts) {
 			ContactDTO cD = new ContactDTO(co);		
@@ -184,48 +163,6 @@ public class SearchController {
 		return cDTO;
 	}
 
-	@PostMapping(value = "/search/searchByLastName")
-	public Iterable<ContactDTO> searchByLastName(@RequestParam("userId") Long userId,
-			@RequestParam("lastName") String simpleQuery) throws Exception {
-		System.out.println("CONTACTS serach by last name ---------------");
-		for (Contact c : contactRepository.findAll()) {
-			contactRepo.save(c);
-		}
-		List<ContactDTO> cDTO = new ArrayList<ContactDTO>();
-		List<Contact> cl = contactRepo.findBylastname(CyirilLatinConverter.cir2lat(simpleQuery));
-
-		for (Contact co : cl) {
-			ContactDTO cD = new ContactDTO(co);
-			cDTO.add(cD);
-		}
-		return cDTO;
-	}
-
-	
-	  /// ne zovi ne pisi
-	  
-	/*
-	 * @GetMapping(value="/search-test") public void mockFind() { List<Contact>
-	 * contacts = generalSearchService.search("mirk", 1L);
-	 * 
-	 * List<ContactDTO> dtos = new ArrayList<ContactDTO>();
-	 * 
-	 * for(Contact contact: contacts) { ContactDTO contactDTO = new
-	 * ContactDTO(contact); dtos.add(contactDTO); }
-	 * 
-	 * return dtos;
-	 * 
-	 * List<Message> messages = messageRepo.findAll();
-	 * 
-	 * List<MessageDTO> messDTO = messages .stream() .map(message -> new
-	 * MessageDTO(message)) .collect(Collectors.toList());
-	 * 
-	 * 
-	 * mdrs.saveAll(messDTO);
-	 * 
-	 * 
-	 * }
-	 */
 
 	@GetMapping(value = "/search-contacts")
 	public List<Contact> searchContacts(@RequestParam(required = false) String query) {
@@ -235,56 +172,34 @@ public class SearchController {
 
 		return generalSearchService.searchContacts(query);
 	}
-	/*
-	 * @GetMapping(value = "/search-messages") public List<Message>
-	 * searchMessages(@RequestParam(required = false) String query) {
-	 * System.out.println("aaaaaaaaaaaaaa"); if (query == null || query.equals(""))
-	 * { return messageRepository.findAll(); }
-	 * 
-	 * return generalSearchService.searchMessages(query); }
-	 * 
-	 * @GetMapping(value = "/search-contacts-test") public List<Contact>
-	 * searchContacts1() {
-	 * 
-	 * 
-	 * return generalSearchService.searchContacts("lidija"); }
-	 */
 
-/*	@PostMapping(value = "/search/contactBool")
-	public ResponseEntity<List<ResultData>> searchByBoolAnd(@RequestParam("firstField") String firstField,
-			@RequestParam("firstValue") String firstValue, @RequestParam("secondField") String secondField,
-			@RequestParam("secondValue") String secondValue, @RequestParam("thirdField") String thirdField,
-			@RequestParam("thirdValue") String thirdValue, @RequestParam("operation") String operation)
+	@PostMapping(value = "/search/contactBool")
+	public ResponseEntity<List<ResultData>> searchByBoolAnd(@RequestBody AdvancedQuery advancedQuery)
 			throws Exception {
 		for (Contact c : contactRepository.findAll()) {
 			contactRepo.save(c);
 		}
-		org.elasticsearch.index.query.QueryBuilder query1 = QueryBuilder.buildQuery(SearchType.regular, firstField,
-				firstValue);
-		org.elasticsearch.index.query.QueryBuilder query2 = QueryBuilder.buildQuery(SearchType.regular, secondField,
-				secondValue);
-		org.elasticsearch.index.query.QueryBuilder query3 = QueryBuilder.buildQuery(SearchType.regular, thirdField,
-				thirdValue);
+		org.elasticsearch.index.query.QueryBuilder query1 = QueryBuilder.buildQuery(SearchType.regular, advancedQuery.getField1(),
+				advancedQuery.getValue1());
+		org.elasticsearch.index.query.QueryBuilder query2 = QueryBuilder.buildQuery(SearchType.regular, advancedQuery.getField2(),
+				advancedQuery.getValue2());
 
 		BoolQueryBuilder builder = QueryBuilders.boolQuery();
-		if (operation.equalsIgnoreCase("AND")) {
+		if (advancedQuery.getOperation().equalsIgnoreCase("AND")) {
 			builder.must(query1);
 			builder.must(query2);
-			builder.must(query3);
-		} else if (operation.equalsIgnoreCase("OR")) {
+		} else if (advancedQuery.getOperation().equalsIgnoreCase("OR")) {
 			builder.should(query1);
 			builder.should(query2);
-			builder.should(query3);
 		}
 
 		List<RequiredHighlight> rh = new ArrayList<RequiredHighlight>();
-		rh.add(new RequiredHighlight(firstField, firstValue));
-		rh.add(new RequiredHighlight(secondField, secondValue));
-		rh.add(new RequiredHighlight(thirdField, thirdValue));
+		rh.add(new RequiredHighlight(advancedQuery.getField1(), advancedQuery.getValue1()));
+		rh.add(new RequiredHighlight(advancedQuery.getField2(), advancedQuery.getValue2()));
 		List<ResultData> results = resultRetriever.getResults(builder, rh);
 		return new ResponseEntity<List<ResultData>>(results, HttpStatus.OK);
 	}
-*/
+
 /*	@PostMapping(value = "/search/contactBool", consumes="application/json")
 	public ResponseEntity<List<ResultData>> searchByBoolAnd(@RequestBody AdvancedQuery advancedQuery)throws Exception {
 		Query query1 =  (Query) QueryBuilder.buildQuery(SearchType.regular, advancedQuery.getField1(), advancedQuery.getValue1());
@@ -319,8 +234,9 @@ public class SearchController {
 	}
 	*/
 	
-	@PostMapping(value = "/search/contactBool", consumes="application/json")
+/*	@PostMapping(value = "/search/contactBool", consumes="application/json")
 	public ResponseEntity<List<ResultData>> searchByBoolAnd(@RequestBody AdvancedQuery advancedQuery)throws Exception {
+		System.out.println("SEARCH CONTACT BOOL");
 		for (Contact c : contactRepository.findAll()) {
 			contactRepo.save(c);
 		}
@@ -348,24 +264,18 @@ public class SearchController {
 		List<ResultData> results = resultRetriever.getResults(builder, rh);
 		return new ResponseEntity<List<ResultData>>(results, HttpStatus.OK);
 	}
-	
-	@GetMapping(value = "/test")
-	public String test() throws Exception {
-		String file = "data";
-		File filess = new File(file);
-		System.out.println(filess.getAbsolutePath());
-		return filess.getAbsolutePath();
-	}
+	*/
+
 //-------------------------PORUKE---------------------------------------------
 
 	@GetMapping(value = "/search-messages/{id}")
-	public List<Message> searchMessages(@RequestParam(required = false) String query, @PathVariable("id") Long id) {
+	public Iterable<Message> searchMessages(@RequestParam(required = false) String query, @PathVariable("id") Long id) {
 		if (query == null || query.equals("")) {
 			return messageRepository.findMessagesByAccountId(id);
 				
 		}
-//		return messageRepo.findAll();
-		return generalSearchService.searchMessages(query);
+		return messageRepo.findAll();
+//		return generalSearchService.searchMessages(query);
 		
 		}
 	
@@ -374,15 +284,16 @@ public class SearchController {
 	  public Iterable<MessageDTO> searchBySubject(@PathVariable("id") Long id, @PathVariable("subject") String subject) throws Exception {
 		  System.out.println("MAILS serach by SUBJECT ---------------" + subject + "id: " + id);
 	  
-		  List<Message> messages = messageRepository.findMessagesByAccountId(id);
-		  System.out.println("Messages lista jeee" + messages); 
-		  for(Message m : messageRepository.findMessagesByAccountId(id)) {
-			
-			  messageRepo.save(m);
-		  	} 
+			/*
+			 * List<Message> messages = messageRepository.findMessagesByAccountId(id);
+			 * System.out.println("Messages lista jeee" + messages); for(Message m :
+			 * messageRepository.findMessagesByAccountId(id)) {
+			 * 
+			 * messageRepo.save(m); }
+			 */
 		  
 		  List<MessageDTO> messagesDTO = new ArrayList<MessageDTO>();
-		  List<Message> messages1 = messageRepo.findBySubjectContaining(CyirilLatinConverter.cir2lat(subject));
+		  List<Message> messages1 = messageRepo.findBySubjectContainingAndAccountId(CyirilLatinConverter.cir2lat(subject), id);
 	  
 		  for(Message m: messages1) { 
 			  	m.setAccount(accountRepository.getOne(id));
@@ -396,14 +307,15 @@ public class SearchController {
 	   public Iterable<MessageDTO> searchByFromAndTo(@PathVariable("id") Long id, @PathVariable("from") String from) throws Exception {
 		  System.out.println("MAILS serach by SENDER ---------------" + from + "id: " + id);
 		  
-		  List<Message> messages = messageRepository.findMessagesByAccountId(id);
-		  System.out.println("Messages lista jeee" + messages); 
-		  for(Message m : messageRepository.findMessagesByAccountId(id)) {
-			
-			  messageRepo.save(m);
-		  	} 
+			/*
+			 * List<Message> messages = messageRepository.findMessagesByAccountId(id);
+			 * System.out.println("Messages lista jeee" + messages); for(Message m :
+			 * messageRepository.findMessagesByAccountId(id)) {
+			 * 
+			 * messageRepo.save(m); }
+			 */
 		  List<MessageDTO> messagesDTO = new ArrayList<MessageDTO>();
-		  List<Message> messages1 = messageRepo.findByFrom(CyirilLatinConverter.cir2lat(from));
+		  List<Message> messages1 = messageRepo.findByFromContainingAndAccountId(CyirilLatinConverter.cir2lat(from), id);
 	  
 		  for(Message m: messages1) { 
 			  	m.setAccount(accountRepository.getOne(id));
@@ -416,16 +328,16 @@ public class SearchController {
 	 @GetMapping(value="/search/searchByContent/{id}/{content}")
 		public Iterable<MessageDTO> searchByContent(@PathVariable("id") Long id, @PathVariable("content") String content) throws Exception {
 			System.out.println("MAILS serach by CONTENT ---------------" + content);
-			content = "%"+content+"%";
-			  List<Message> messages = messageRepository.findMessagesByAccountId(id);
-			  System.out.println("Messages lista jeee" + messages); 
-			  for(Message m : messageRepository.findMessagesByAccountId(id)) {
-				
-				  messageRepo.save(m);
-			  	} 
-			
+			/*
+			 * content = "%"+content+"%"; List<Message> messages =
+			 * messageRepository.findMessagesByAccountId(id);
+			 * System.out.println("Messages lista jeee" + messages); for(Message m :
+			 * messageRepository.findMessagesByAccountId(id)) {
+			 * 
+			 * messageRepo.save(m); }
+			 */
 			 List<MessageDTO> messagesDTO = new ArrayList<MessageDTO>();
-			 List<Message> messages1 = messageRepository.findByContent(CyirilLatinConverter.cir2lat(content), id);
+			 List<Message> messages1 = messageRepo.findByContentContainingAndAccountId(CyirilLatinConverter.cir2lat(content), id);
 			 for(Message m: messages1) { 
 				  	m.setAccount(accountRepository.getOne(id));
 				  	MessageDTO messageDTO = new MessageDTO(m);
@@ -434,4 +346,97 @@ public class SearchController {
 			  		return messagesDTO;
 		}
 	 
+	 
+		/*
+		 * @GetMapping(value = "/search-messages") public Iterable<Message>
+		 * searchMessagesALL(@RequestParam(required = false) String query) {
+		 * System.out.println("SEARCH MESSAGES BY USER"); if (query == null ||
+		 * query.equals("")) { return messageRepository.findAll();
+		 * 
+		 * } return generalSearchService.searchMessages(query); }
+		 */
+
+}
+//-------------------------PORUKE BY USER---------------------------------------------
+
+/*	@GetMapping(value = "/search-messages")
+	public List<Message> searchMessagesALL(@RequestParam(required = false) String query) {
+		System.out.println("SEARCH MESSAGES BY USER");
+		if (query == null || query.equals("")) {
+			return messageRepository.findAll();
+				
 		}
+//		return messageRepo.findAll();
+		return generalSearchService.searchMessages(query);
+		
+		}
+	@GetMapping(value = "/search-messages/{id}")
+	public List<Message> searchMessages(@RequestParam(required = false) String query, @PathVariable("id") Long id) {
+		System.out.println("SEARCH MESSAGES BY USER");
+		if (query == null || query.equals("")) {
+			return messageRepository.findMessagesByEuserId(id);
+				
+		}
+//		return messageRepo.findAll();
+		return generalSearchService.searchMessages(query);
+		
+		}
+	
+	 @GetMapping(value = "/search/searchBySubject/{id}/{subject}") 
+	  public Iterable<MessageDTO> searchBySubject(@PathVariable("id") Long id, @PathVariable("subject") String subject) throws Exception {
+		  System.out.println("MAILS serach by SUBJECT ---------------" + subject + "id: " + id);
+		  List<Message> messages = messageRepository.findMessagesByEuserId(id);
+		  System.out.println("Messages lista jeee" + messages); 
+		  for(Message m : messageRepository.findMessagesByEuserId(id)) {
+			
+			  messageRepo.save(m);
+		  	} 
+		  
+		  List<MessageDTO> messagesDTO = new ArrayList<MessageDTO>();
+		  List<Message> messages1 = messageRepo.findBySubjectContaining(CyirilLatinConverter.cir2lat(subject.trim()));
+	  
+		  for(Message m: messages1) { 
+			  	Long accountId = accountRepository.findByMessageId(m.getId());
+			  	m.setAccount(accountRepository.getOne(accountId));
+			  	MessageDTO messageDTO = new MessageDTO(m);
+			  	messagesDTO.add(messageDTO);
+		  			} 
+		  		return messagesDTO;
+	 }
+	
+	
+	
+	 @GetMapping(value="/search/searchBySender/{id}/{from}")
+	   public Iterable<MessageDTO> searchByFromAndTo(@PathVariable("id") Long id, @PathVariable("from") String from) throws Exception {
+		  System.out.println("MAILS serach by SENDER ---------------" + from + "id: " + id);
+		  
+		  List<Message> messages = messageRepository.findMessagesByEuserId(id);
+		  System.out.println("Messages lista jeee" + messages); 
+		  for(Message m : messageRepository.findMessagesByEuserId(id)) {
+			
+			  messageRepo.save(m);
+		  	} 
+		  List<MessageDTO> messagesDTO = new ArrayList<MessageDTO>();
+		  List<Message> messages1 = messageRepo.findByFromContaining(CyirilLatinConverter.cir2lat(from));
+	  
+		  for(Message m: messages1) { 
+			 	Long accountId = accountRepository.findByMessageId(m.getId());
+			  	m.setAccount(accountRepository.getOne(accountId));
+			  	MessageDTO messageDTO = new MessageDTO(m);
+			  	messagesDTO.add(messageDTO);
+		  			} 
+		  		return messagesDTO;
+	   }*/
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

@@ -75,5 +75,11 @@ public class AccountService implements AccountInterface {
 		return null;
 	}
 
+	@Override
+	public Long findByMessageId(Long id) {
+		// TODO Auto-generated method stub
+		return accountRepository.findByMessageId(id);
+	}
+
 
 }

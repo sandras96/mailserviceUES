@@ -10,40 +10,60 @@ $(document).ready(function() {
 	$( "#showAdvSrch" ).click(function() {
 		$("#advancedSearch").show();
 		});*/
-	searchAll();
+	loadContacts(currentUserId);
+	
 	
 });
 
 
-function searchAll(){
+function loadContacts(userId){
 	var token = localStorage.getItem("token");
-	console.log("SEARCH ALL");
-	var field = $('#tipField').find(":selected").val();
-	var value=$("#value").val().trim().toLowerCase();
-	console.log("Pretraga :" + field + value + currentUserId);
-	var data = {
-			"firstName" : value,
-		}
 	$.ajax({
 		type: 'get',
-		url: "https://localhost:8080/elasticsearch/search-contacts/",
+		url: "https://localhost:8080/mailservice/contacts/user/" + userId,
 		headers:{Authorization:"Bearer " + token},
-		data : data,
 		cache: false,
-		contentType: 'application/json',
 		success: function(response){
-			initContacts(response);
+			for(var i=0; i<response.length; i++){
+				contact = response[i];
+				contactId = contact.id;
+				console.log("contacttt" + response)
+		//		getAllPhotos(contactId);
+				var usersDiv = $("#usersDiv1");
+						
+						var tableRow= $('<tr></tr>');
+						var img = $('<td><div><button type="button" class="btn btn-link btn-lg" data-toggle="modal" data-target="#showPicturesModal">'
+								+'<span class="glyphicon glyphicon-user" style="color: black" value="'+contactId+'" onClick="showPicturesModal('+contactId+')"></span><span style="color: black"></span>'
+							+'</button></div></td>');
+						var displayName = $('<td>'+contact.displayName+'</td>');
+						var firstname = $('<td>'+contact.firstname+'</td>');
+						var lastname = $('<td>'+contact.lastname+'</td>');
+						var email = $('<td>'+contact.email+'</td>');
+						var note = $('<td>'+contact.text+'</td>');
+						var btnRemove= $('<td><button type="button" onClick="deleteContact('+contactId+')" class="removeUser btn btn-xs" value="'+contactId+'"><span class="glyphicon glyphicon-remove"></span></button></td>')
+						var btnEdit= $('<td><button type="button" data-toggle="modal" data-target="#editUserModal" onClick="editContactModal('+contactId+')" class="editUser btn btn-xs"><span class="glyphicon glyphicon-pencil"></span></button></td>')
+						
+						tableRow.append(img);
+						tableRow.append(displayName);
+							tableRow.append(firstname);
+							tableRow.append(lastname);
+							tableRow.append(email);
+							tableRow.append(note);
+							tableRow.append(btnEdit);
+							tableRow.append(btnRemove);
+							usersDiv.append(tableRow);
+							
+							
+						}
 					},
-			error: function (jqXHR, textStatus, errorThrown) {  
-				if(jqXHR.status=="404"){
-					
-					alert(textStatus, errorThrown);
-				}
-				console.log(currentUserId + value)
-			}
-		
-		});
-}
+					error: function (jqXHR, textStatus, errorThrown) {  
+						if(jqXHR.status=="404"){
+							alert(textStatus, errorThrown);
+						}
+					}
+				});
+
+		}
 function searchica(){
 	console.log("srcicaaa")
 	searchFunction();
@@ -81,7 +101,7 @@ function search(value){
 	console.log("SEARCH + VALUE");
 	$.ajax({
 		type: 'get',
-		url: "https://localhost:8080/elasticsearch/search/" + value,
+		url: "https://localhost:8080/elasticsearch/search/" + value + "/" + currentUserId,
 		headers:{Authorization:"Bearer " + token},
 		cache: false,
 		contentType: 'application/json',

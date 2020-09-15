@@ -56,9 +56,12 @@ public class GeneralSearchService {
 		  );
 	  }
 	  
-	  public NativeSearchQuery messageQuery(String query) { MultiMatchQueryBuilder
-	  messageMultiMatchQuery = QueryBuilders.multiMatchQuery(query) .field("from")
-	  .field("to") .field("subject") .operator(Operator.OR)
+	  public NativeSearchQuery messageQuery(String query) { 
+		  MultiMatchQueryBuilder messageMultiMatchQuery = QueryBuilders.multiMatchQuery(query) 
+	  .field("subject")
+	  .field("from")
+	  .field("content") 
+	  .operator(Operator.OR)
 	  .fuzziness(Fuzziness.AUTO) .prefixLength(3);
 	  
 	  return new
