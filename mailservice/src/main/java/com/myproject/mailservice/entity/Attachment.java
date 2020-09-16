@@ -31,7 +31,7 @@ public class Attachment {
 	
 	
 	@Column(name = "attachment_mime")
-	private String MIME;
+	private String mime;
 	
 	
 	@Column(name = "attachment_name")
@@ -51,13 +51,20 @@ public class Attachment {
 	}
 
 
-	public Attachment(Long id, String path, String mIME, String name, Message message) {
+	public Attachment(Long id, String path, String mime, String name, Message message) {
 		super();
 		this.id = id;
 		this.path = path;
-		MIME = mIME;
+		this.mime = mime;
 		this.name = name;
 		this.message = message;
+	}
+	
+	public Attachment(Long id, String path, String mime, String name) {
+		this.id = id;
+		this.path = path;
+		this.mime = mime;
+		this.name = name;
 	}
 
 
@@ -81,13 +88,13 @@ public class Attachment {
 	}
 
 
-	public String getMIME() {
-		return MIME;
+	public String getMime() {
+		return mime;
 	}
 
 
-	public void setMIME(String mIME) {
-		MIME = mIME;
+	public void setMime(String mime) {
+		this.mime = mime;
 	}
 
 
@@ -111,11 +118,6 @@ public class Attachment {
 	}
 
 
-	@Override
-	public String toString() {
-		return "Attachment [id=" + id + ", path=" + path + ", MIME=" + MIME + ", name=" + name + ", message=" + message
-				+ "]";
-	}
 	
 	
 	

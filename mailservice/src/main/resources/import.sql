@@ -50,3 +50,12 @@ insert into message_tag(message_id, tag_id) values(2,3);
 insert into message_tag(message_id, tag_id) values(1,4);
 insert into message_tag(message_id, tag_id) values(2,4);
 
+insert into attachment(attachment_mime, attachment_name, attachment_path, message_id)values("pdf1", "emailClient.pdf", "files/emailClient.pdf", 1);
+insert into attachment(attachment_mime, attachment_name, attachment_path, message_id)values("pdf2", "IB-projekat.pdf", "files/IB-projekat.pdf", 2); 
+insert into attachment(attachment_mime, attachment_name, attachment_path, message_id)values("txt", "odgovori.txt", "files/odgovori.txt", 3);
+insert into attachment(attachment_mime, attachment_name, attachment_path, message_id)values("img", "img_avatar3.png", "files/img_avatar3.png", 4);
+insert into attachment(attachment_mime, attachment_name, attachment_path, message_id)values("img", "img_avatar3.png", "files/img_avatar3.png", 1);
+insert into attachment(attachment_mime, attachment_name, attachment_path, message_id)values("img", "odgovori.txt", "files/odgovori.txt", 1);
+
+
+

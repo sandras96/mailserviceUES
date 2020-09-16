@@ -155,25 +155,6 @@ function getAccounts(accounts){
 	$select.change(function(){
 	//	$(".messaging").show();
 		getAllmessagesByAccountId();
-		/*var accountId = $('#selAccounts').find(":selected").val();
-		
-			$.ajax({
-				type: 'get',
-				url: "https://localhost:8080/elasticsearch/search-messages/" + accountId,
-				cache: false,
-				contentType: 'application/json',
-				success: function(response){
-					$('.inbox_chat').empty();
-					$('.incoming_msg').empty();
-					initMessages(response);
-				},
-					
-					error: function (jqXHR, textStatus, errorThrown) {  
-						if(jqXHR.status=="404"){
-							alert(textStatus, errorThrown);
-						}
-					}
-				});*/
 	})
 	}
 
@@ -211,7 +192,12 @@ function appendMessage(message){
 							' <p>subject: '+response.subject+'</p>'+
 							'<p>'+response.content+'</p></div>');
 					
+					
 					div2.appendTo($('.incoming_msg'));
+					
+					getAttachment(response.id);
+					
+					
 					
 				},
 				
@@ -226,6 +212,61 @@ function appendMessage(message){
 		  $('.incoming_msg').empty();
 		}
 	);
+}
+
+function getAttachment(messageId){
+	
+	var token = localStorage.getItem("token");
+
+	$.ajax({
+		type: 'get',
+		url: "https://localhost:8080/mailservice/attachments/message/" + messageId,
+		headers:{Authorization:"Bearer " + token},
+		cache: false,
+		contentType: 'application/json',
+		success: function(response){
+			if(response.length != 0){
+				for(var i=0; i<response.length; i++){
+					attachment = response[i];
+					attachmentId = attachment.id;
+				var div3 = $('<div id="attachment" style="float:right; margin-right:15px"><a href="'+attachment.path+'"download="" id="'+attachmentId+'" class="h"><img src="img/paperclip3_black.png" style="width:30px; height:30px"/>'+attachment.name+'</a></div>');
+				div3.appendTo($('.incoming_msg'));
+				
+				
+					
+					$(".h").click(function(){
+						console.log("clickclick" + attachment.mime)
+						var filename = attachment.name;
+						$.ajax({
+							type: "POST",
+							url: "https://localhost:8080/mailservice/attachments/download1/" + filename,
+							headers:{Authorization:"Bearer " + token},
+							contentType: 'application/json',
+							success: function (data) {
+							//	console.log(data)
+						//		window.open(data.resource);
+						//		window.location.href = data.resource
+								console.log("YaY");
+									},
+							error: function (jqXHR, textStatus, errorThrown) {
+        	
+								alert(jqXHR+ textStatus+ errorThrown);
+
+							}
+					});
+						
+				});
+			}
+			}
+		
+		},
+			
+			error: function (jqXHR, textStatus, errorThrown) {  
+				if(jqXHR.status=="404"){
+					alert(textStatus, errorThrown);
+				}
+			}
+		});
 }
 
 function searchica(){

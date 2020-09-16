@@ -3,6 +3,8 @@ package com.myproject.mailservice.dto;
 
 import java.io.Serializable;
 
+import com.myproject.mailservice.entity.Attachment;
+
 public class AttachmentDTO implements Serializable {
 
 	/**
@@ -14,7 +16,7 @@ public class AttachmentDTO implements Serializable {
 	
 	private Long id;
 	private String path;
-	private String MIME;
+	private String mime;
 	private String name;
 	private MessageDTO message;
 	
@@ -25,13 +27,16 @@ public class AttachmentDTO implements Serializable {
 		super();
 	}
 
-	public AttachmentDTO(Long id, String path, String mIME, String name, MessageDTO message) {
+	public AttachmentDTO(Attachment a) {
+		this(a.getId(), a.getMime(), a.getName(), a.getPath());
+	}
+	public AttachmentDTO(Long id, String mime, String name, String path ) {
 		super();
 		this.id = id;
 		this.path = path;
-		MIME = mIME;
+		this.mime = mime;
 		this.name = name;
-		this.message = message;
+		
 	}
 	public Long getId() {
 		return id;
@@ -45,12 +50,15 @@ public class AttachmentDTO implements Serializable {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	public String getMIME() {
-		return MIME;
+	
+	public String getMime() {
+		return mime;
 	}
-	public void setMIME(String mIME) {
-		MIME = mIME;
+
+	public void setMime(String mime) {
+		this.mime = mime;
 	}
+
 	public String getName() {
 		return name;
 	}

@@ -75,6 +75,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                   .antMatchers("/mailservice/accounts/**").permitAll()
                   .antMatchers("/mailservice/users/**").permitAll()
                   .antMatchers("/mailservice/messages/**").permitAll()
+                  .antMatchers("/mailservice/attachments/**").permitAll()
 //	              .antMatchers("/elasticsearch/").permitAll()
 	              .antMatchers("/mailservice/tags/**").permitAll()
 	              .antMatchers("/elasticsearch/search/contactFuzzy/{fuzzy}").hasAuthority("ADMIN")
@@ -112,9 +113,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 "/**/*.html",
                 "/**/*.css",
                 "/**/*.js",
-                "/ebook/books/all",
-                "/ebook/books/**",
-                "/ebook/category",
+                "/**/*.pdf",
+                "/**/*.txt",
                 "/**/*.jpg",
                 "/**/*.png",
                 "/bootstrap/**"
