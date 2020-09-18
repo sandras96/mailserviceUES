@@ -54,14 +54,14 @@ public class AccountController {
 		 	logger.info("GET request for all accounts from user with id: " + id);
 		 	List<Account> accounts=accountService.findAccountsByEuserId(id);
 	        List<AccountDTO>accountsDTO=new ArrayList<>();
-	        if(accounts == null)
-	            return new ResponseEntity<List<AccountDTO>>(HttpStatus.NOT_FOUND);
-	        else {
-	            for (Account a:accounts)
-	                accountsDTO.add(new AccountDTO(a));
-	        }
+	            for (Account a:accounts) {
+	            	 accountsDTO.add(new AccountDTO(a));
+	            	}
+	         
 	        return new ResponseEntity<List<AccountDTO>>(accountsDTO,HttpStatus.OK);
 	    }
+	 
+	 
 	 
 	 @PostMapping(value="/addAccount")
 		public ResponseEntity<AccountDTO> addAccount(@RequestParam("smtpAddress") String smtpAddress,
@@ -75,6 +75,10 @@ public class AccountController {
 													 @RequestParam("euser") Long id){
 		 
 		 	logger.info("Post request for adding new account with username: " + username +" for user with id: " + id);
+		 	Account account1 = accountService.findByUsername(username);
+		 	if(account1 != null) {
+		 		return new ResponseEntity<AccountDTO>(HttpStatus.FORBIDDEN);
+		 		}
 			Account account = new Account();
 			account.setSmtpAddress(smtpAddress);
 			account.setSmtpPort(smtpPort);
@@ -87,7 +91,7 @@ public class AccountController {
 			account.setUser(userService.getOne(id));
 			
 			account = accountService.save(account);
-			return new ResponseEntity<AccountDTO>(new AccountDTO(account), HttpStatus.OK);
+			return new ResponseEntity<AccountDTO>(new AccountDTO(account), HttpStatus.CREATED);
 		}
 	 
 	 @PutMapping(value="/editAccount/{id}", consumes="application/json")
@@ -95,20 +99,60 @@ public class AccountController {
 		 	logger.info("Put request for updating account with id: " + id);
 		 	Account account = accountService.getOne(id);
 			if(account == null) {
-				return new ResponseEntity<AccountDTO>(HttpStatus.BAD_REQUEST);
-			}
+				return new ResponseEntity<AccountDTO>(HttpStatus.NOT_FOUND);
+				}
 			
+			if(accountDTO.getSmtpAddress().equals("")) {
+				account.setSmtpAddress(account.getSmtpAddress());
+			}else {
 				account.setSmtpAddress(accountDTO.getSmtpAddress());
+				}
+			
+			if(accountDTO.getSmtpPort() == 0) {
+				account.setSmtpPort(account.getSmtpPort());
+			}else {
 				account.setSmtpPort(accountDTO.getSmtpPort());
+				}
+			
+			if(accountDTO.getInServerType() == 0) {
+				account.setInServerType(account.getInServerType());
+			}else {
 				account.setInServerType(accountDTO.getInServerType());
+				}
+			
+			if(accountDTO.getInServerAddress().equals("")) {
+				account.setInServerAddress(account.getInServerAddress());
+			}else {
 				account.setInServerAddress(accountDTO.getInServerAddress());
+				}
+			
+			if(accountDTO.getInServerPort() == 0) {
+				account.setInServerPort(account.getInServerPort());
+			}else {
 				account.setInServerPort(accountDTO.getInServerPort());
+				}
+			
+			if(accountDTO.getUsername().equals("")) {
+				account.setUsername(account.getUsername());
+			}else {
 				account.setUsername(accountDTO.getUsername());
+				}
+			
+			if(accountDTO.getPassword().equals("")) {
+				account.setPassword(account.getPassword());
+			}else {
 				account.setPassword(accountDTO.getPassword());
+				}
+			
+			if(accountDTO.getDisplayName().equals("")) {
+				account.setDisplayName(account.getDisplayName());
+			}else {
 				account.setDisplayName(accountDTO.getDisplayName());
+				}
+
 				
-				account = accountService.save(account);
-				return new ResponseEntity<AccountDTO>(new AccountDTO(account), HttpStatus.OK);
+			account = accountService.save(account);
+			return new ResponseEntity<AccountDTO>(new AccountDTO(account), HttpStatus.OK);
 			
 		}
 	 

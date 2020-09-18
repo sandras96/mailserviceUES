@@ -66,12 +66,9 @@ public class ContactController {
 		 	logger.info("GET request for all contacts from user with id: " + id);
 		 	List<Contact> contacts=contactService.findContactsByEuserId(id);
 	        List<ContactDTO>contactsDTO=new ArrayList<>();
-	        if(contacts == null)
-	            return new ResponseEntity<List<ContactDTO>>(HttpStatus.NOT_FOUND);
-	        else {
-	            for (Contact c: contacts)
-	                contactsDTO.add(new ContactDTO(c));
-	        }
+            for (Contact c: contacts) {
+                contactsDTO.add(new ContactDTO(c));
+            }
 	        return new ResponseEntity<List<ContactDTO>>(contactsDTO,HttpStatus.OK);
 	    }
 	 
@@ -103,7 +100,7 @@ public class ContactController {
 			Contact contact = contactService.getOne(id);
 			System.out.println(id);
 			if(contact == null) {
-				return new ResponseEntity<ContactDTO>(HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<ContactDTO>(HttpStatus.NOT_FOUND);
 			}
 			
 			if(contactDTO.getDisplayName().equals("")) {
@@ -171,13 +168,12 @@ public class ContactController {
 		 	System.out.println("uploadddd " + uploadedPhoto);
 		 	return photoRepository.save(uploadedPhoto);
 	    }
-	 public File convert(MultipartFile file) throws IOException
-	 	{    
-	 	  File convFile = new File(file.getOriginalFilename());
-	 	  convFile.createNewFile(); 
-	 	  FileOutputStream fos = new FileOutputStream(convFile); 
-	 	  fos.write(file.getBytes());
-	 	  fos.close(); 
-	 	  return convFile;
-	 	}
-}
+	 	public File convert(MultipartFile file) throws IOException{
+		 	  File convFile = new File(file.getOriginalFilename());
+		 	  convFile.createNewFile(); 
+		 	  FileOutputStream fos = new FileOutputStream(convFile); 
+		 	  fos.write(file.getBytes());
+		 	  fos.close(); 
+		 	  return convFile;
+		 	}
+	}

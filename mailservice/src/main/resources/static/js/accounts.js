@@ -11,7 +11,6 @@ $(document).ready(function(){
 	loadMessages(currentUserId);
 	loadTags(currentUserId);
 	$(".searchAndSelect").hide();
-//	$(".messaging").hide();
 	
 	$("#primary").click(function(){
 		console.log("radi li")
@@ -39,7 +38,6 @@ function loadMessages(userId){
 		dataType: 'json',
 		cache: false,
 		success: function(response){
-			 
 			initMessages(response);
 			
 		},
@@ -86,9 +84,8 @@ function loadTags(userId){
 								}
 							}
 						});
-			})
-			}
-	
+					})
+				}
 			
 		},
 		error: function (jqXHR, textStatus, errorThrown) {  
@@ -114,57 +111,56 @@ function loadAccounts(userId){
 			for(var i=0; i<response.length; i++){
 				account = response[i];
 				accountId = account.id;
+			
+				var usersDiv = $("#usersDiv1");
 				
+				var tableRow= $('<tr></tr>');
+				var img = $('<td><div class="glyphicon glyphicon-user"></div></td>');
+				var displayname = $('<td>'+account.displayName+'</td>');
+				var username = $('<td>'+account.username+'</td>');
+				var btnRemove= $('<td><button type="button" onClick="deleteAccount('+accountId+')" class="removeUser btn btn-xs"><span class="glyphicon glyphicon-remove"></span></button></td>')
+				var btnEdit= $('<td><button type="button" data-toggle="modal" data-target="#editUserModal" onClick="editAccountModal('+accountId+')" class="editUser btn btn-xs"><span class="glyphicon glyphicon-pencil"></span></button></td>')
 			
-	var usersDiv = $("#usersDiv1");
-			
-			var tableRow= $('<tr></tr>');
-			var img = $('<td><div class="glyphicon glyphicon-user"></div></td>');
-			var displayname = $('<td>'+account.displayName+'</td>');
-			var username = $('<td>'+account.username+'</td>');
-			var btnRemove= $('<td><button type="button" onClick="deleteAccount('+accountId+')" class="removeUser btn btn-xs"><span class="glyphicon glyphicon-remove"></span></button></td>')
-			var btnEdit= $('<td><button type="button" data-toggle="modal" data-target="#editUserModal" onClick="editAccountModal('+accountId+')" class="editUser btn btn-xs"><span class="glyphicon glyphicon-pencil"></span></button></td>')
-			
-			tableRow.append(img);
+				tableRow.append(img);
 				tableRow.append(displayname);
 				tableRow.append(username);
 				tableRow.append(btnEdit);
 				tableRow.append(btnRemove);
 				usersDiv.append(tableRow);
-			}
-			getAccounts(response, userId);
-		},
-		error: function (jqXHR, textStatus, errorThrown) {  
-			if(jqXHR.status=="404"){
-				alert(textStatus, errorThrown);
-			}
-		}
-	});
+				}
+				getAccounts(response, userId);
+				
+			},
+				error: function (jqXHR, textStatus, errorThrown) {  
+					if(jqXHR.status=="404"){
+						alert(textStatus, errorThrown);
+					}
+				}
+		});
 
-}
+	}
 
 function getAccounts(accounts){
 	 var $select = $("#selAccounts");
 //	 $select.find("option").remove(); 
-	for (var i = 0; i < accounts.length; i++) {
+	 for (var i = 0; i < accounts.length; i++) {
 		 $("<option>").val(accounts[i].id).text(accounts[i].displayName).appendTo($select);
+	 	}
 		
-	}
-		
-	
-	$select.change(function(){
-	//	$(".messaging").show();
+		$select.change(function(){
+		//	$(".messaging").show();
 		getAllmessagesByAccountId();
+		
 	})
-	}
+}
 
 
 function initMessages(messages){
 	for (var i = 0; i < messages.length; i++) {
 		appendMessage(messages[i]);
-		
 	}
 };
+
 function appendMessage(message){
 	var token = localStorage.getItem("token");
 	var div1 = $('<div class="chat_list active_chat" value='+message.id+'><div class="chat_people">'+
@@ -175,6 +171,7 @@ function appendMessage(message){
 	div1.appendTo($('.inbox_chat'));
 	var imgId = "#img" + message.id;
 	var imgbtn = $(imgId);
+	
 	imgbtn.click(function(e) {
 		  e.preventDefault();
 		  var imageId = $(this).attr("value"); 
@@ -193,21 +190,18 @@ function appendMessage(message){
 							'<p>'+response.content+'</p></div>');
 					
 					
-					div2.appendTo($('.incoming_msg'));
+							div2.appendTo($('.incoming_msg'));
 					
-					getAttachment(response.id);
-					
-					
+							getAttachment(response.id);
 					
 				},
-				
-							error: function (jqXHR, textStatus, errorThrown) {  
-								if(jqXHR.status=="404"){
-									alert(textStatus);
-								}
-							}
-				
-						});			
+					error: function (jqXHR, textStatus, errorThrown) {  
+						if(jqXHR.status=="404"){
+							alert(textStatus);
+						}
+					}
+		
+		  });			
 
 		  $('.incoming_msg').empty();
 		}
@@ -215,9 +209,7 @@ function appendMessage(message){
 }
 
 function getAttachment(messageId){
-	
 	var token = localStorage.getItem("token");
-
 	$.ajax({
 		type: 'get',
 		url: "https://localhost:8080/mailservice/attachments/message/" + messageId,
@@ -229,9 +221,8 @@ function getAttachment(messageId){
 				for(var i=0; i<response.length; i++){
 					attachment = response[i];
 					attachmentId = attachment.id;
-				var div3 = $('<div id="attachment" style="float:right; margin-right:15px"><a href="'+attachment.path+'"download="" id="'+attachmentId+'" class="h"><img src="img/paperclip3_black.png" style="width:30px; height:30px"/>'+attachment.name+'</a></div>');
-				div3.appendTo($('.incoming_msg'));
-				
+					var div3 = $('<div id="attachment" style="float:right; margin-right:15px"><a href="'+attachment.path+'"download="" id="'+attachmentId+'" class="h"><img src="img/paperclip3_black.png" style="width:30px; height:30px"/>'+attachment.name+'</a></div>');
+					div3.appendTo($('.incoming_msg'));
 				
 					
 					$(".h").click(function(){
@@ -257,40 +248,20 @@ function getAttachment(messageId){
 						
 				});
 			}
-			}
-		
+		}
 		},
-			
-			error: function (jqXHR, textStatus, errorThrown) {  
-				if(jqXHR.status=="404"){
-					alert(textStatus, errorThrown);
-				}
+		error: function (jqXHR, textStatus, errorThrown) {  
+			if(jqXHR.status=="404"){
+				alert(textStatus, errorThrown);
 			}
-		});
+		}
+	});
 }
 
 function searchica(){
 	console.log("srcicaaa")
 	searchFunction();
 }
-/*function buttonsss(){
-	console.log("whaaat")
-	var accountId = $('#selAccounts').find(":selected").val();
-	console.log(accountId)
-	$.ajax({
-		type: 'get',
-		url: "https://localhost:8080/elasticsearch/search-messages/",
-		cache: false,
-		success: function(response){
-			console.log(response)
-					},
-					error: function (jqXHR, textStatus, errorThrown) {  
-						if(jqXHR.status=="404"){
-							alert(textStatus, errorThrown);
-						}
-					}
-				});
-	}*/
 
 function getAllmessagesByAccountId(){
 	var token = localStorage.getItem("token");
@@ -305,23 +276,22 @@ function getAllmessagesByAccountId(){
 		cache: false,
 		contentType: 'application/json',
 		success: function(response){
+			
 			$('.inbox_chat').empty();
 			$('.incoming_msg').empty();
 			initMessages(response);
-	//		loadTagsByAccount(accountId);
-		},
 			
+		},
 			error: function (jqXHR, textStatus, errorThrown) {  
 				if(jqXHR.status=="404"){
 					alert(textStatus, errorThrown);
 				}
 			}
-		});
+	});
 }
 
 function searchFunction(){
-	var token = localStorage.getItem("token");
-	console.log("ON CHANGE SELECT")
+	 console.log("ON CHANGE SELECT")
 	 var typeField = $("#tipField").val();
 	 var value =$("#value").val().trim().toLowerCase();
 	 var accountId = $('#selAccounts').find(":selected").val();
@@ -367,14 +337,14 @@ function searchMessages(v){
 			initMessages(response);
 			console.log(response)
 			
-					},
-					error: function (jqXHR, textStatus, errorThrown) {  
-						if(jqXHR.status=="404"){
-							alert(textStatus, errorThrown);
-						}
-					}
-				});
-	}
+		},
+			error: function (jqXHR, textStatus, errorThrown) {  
+				if(jqXHR.status=="404"){
+						alert(textStatus, errorThrown);
+				}
+			}
+	});
+}
 
 function sortMessages(){
 	var sortBy = $('#sortByMessages').val();
@@ -391,8 +361,6 @@ function sortMessages(){
 }
 function getMessagesSortBy(sortby){
 	var token = localStorage.getItem("token");
-	
-	
 	console.log("account id je " + accountId)
 	$.ajax({
 		type: 'get',
@@ -404,17 +372,14 @@ function getMessagesSortBy(sortby){
 			$('.incoming_msg').empty();
 			initMessages(response);
 		},
-			
 			error: function (jqXHR, textStatus, errorThrown) {  
 				if(jqXHR.status=="404"){
 					alert(textStatus, errorThrown);
-				}
 			}
-		});
+		}
+	});
 	
 }
-
-
 
 function addAccount(){
 	var token = localStorage.getItem("token");
@@ -457,10 +422,9 @@ function addAccount(){
 			location.reload();
 			
 		},
-		error: function (jqXHR, textStatus, errorThrown) {  
-			alert(jqXHR.status);
-			
-		}
+			error: function (jqXHR, textStatus, errorThrown) {  
+				alert(jqXHR.status);
+			}
     });
 }
 
@@ -519,10 +483,7 @@ function editAccount(){
 	var password = $('#editpassword').val();
 	var displayName = $('#editdisplayname').val();
 	var valEditButton = $("#buttonEdit").val();
-	if(smtpAddress == "" || smtpPort =="" || inServerType == ""|| inServerAddress =="" || inServerPort == ""
-		|| username == ""|| password =="" || displayName == ""){
-		alert("Please fill all fields");
-	}
+	
 	var data = {
 			'smtpAddress' : smtpAddress,
 			'smtpPort' : smtpPort,
@@ -544,10 +505,6 @@ function editAccount(){
 			cache: false,
 			processData: false,
 		    success: function (response) {
-		    	
-		    	/*if(checked==true){
-		    		uploadPicUser(currentEditUser,photo);
-		    	}*/
 		    	console.log(response);
 		    	alert("Successful!")
 		    	location.reload();
@@ -575,54 +532,7 @@ function deleteMessage(deleteId){
     });
 }
 
-/*function loadTagsByAccount(accountId){
-	$.ajax({
-		url: "httpss://localhost:8080/mailservice/tags/getAll/" + accountId,
-		type: 'GET',
-		success : function(response){
-			console.log("tagsss" + response)
-			getTags(response)
-		},
-		error: function (jqXHR, textStatus, errorThrown) {  
-			alert(jqXHR.status);
-		}
-    });
-}
-function getTags(tags){
-	 var $select = $("#tagFilter");
-	for (var i = 0; i < tags.length; i++) {
-		 $("<option>").val(tags[i].id).text(tags[i].name).appendTo($select);
-		
-	}
-		
-	
-	$select.change(function(){
-		
-		var tagId = $('#tagFilter').find(":selected").val();
-		var accountId = $('#selAccounts').find(":selected").val();
-		
-			$.ajax({
-				type: 'get',
-				url: "https://localhost:8080/mailservice/tags/message/" + tagId + "/" + accountId ,
-				cache: false,
-				contentType: 'application/json',
-				success: function(response){
-					console.log("response je " + response);
-					$(".inbox_chat").empty();
-					$(".incoming_msg").empty();
-					initMessages(response);
-				},
-					
-					error: function (jqXHR, textStatus, errorThrown) {  
-						if(jqXHR.status=="404"){
-							alert(textStatus, errorThrown);
-						}
-					}
-				});
-	})
-	}
 
-*/
 
 
 
