@@ -32,6 +32,7 @@ public class MessageController {
 	@Autowired
 	private MessageInterface messageService;
 	
+	
 	@Autowired(required=true)
 	private MessageRepositoryElasticSearch messageRepo;
 	
@@ -56,12 +57,10 @@ public class MessageController {
 		 	logger.info("GET request for all messages from account with id: " + id);
 		 	List<Message> messages=messageService.findMessagesByAccountId(id);
 	        List<MessageDTO>messagesDTO=new ArrayList<>();
-	        if(messages == null)
-	            return new ResponseEntity<List<MessageDTO>>(HttpStatus.NOT_FOUND);
-	        else {
-	            for (Message m:messages)
-	                messagesDTO.add(new MessageDTO(m));
+	        for (Message m:messages) {
+	            messagesDTO.add(new MessageDTO(m));	
 	        }
+	        
 	        return new ResponseEntity<List<MessageDTO>>(messagesDTO,HttpStatus.OK);
 	    }
 	 
@@ -85,6 +84,7 @@ public class MessageController {
 				return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 			}else {
 				messageService.delete(id);
+				
 				return new ResponseEntity<Void>(HttpStatus.OK);
 			}
 		}

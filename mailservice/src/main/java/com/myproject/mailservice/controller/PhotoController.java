@@ -20,6 +20,7 @@ import com.myproject.mailservice.entity.Contact;
 import com.myproject.mailservice.entity.Photo;
 import com.myproject.mailservice.repository.PhotoRepository;
 import com.myproject.mailservice.service.ContactInterface;
+import com.myproject.mailservice.service.PhotoInterface;
 import com.myproject.mailservice.service.UserInterface;
 
 
@@ -33,14 +34,14 @@ public class PhotoController {
 	
 	
 	@Autowired
-	PhotoRepository photoRepository;
+	private PhotoInterface photoService;
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	 @GetMapping(value = "/contact/{id}")
 	    public ResponseEntity<List<PhotoDTO>> getPhotosByContact(@PathVariable("id") Long id){
 		 	logger.info("GET request for all photos from contact with id: " + id);
-		 	List<Photo> photos=photoRepository.findPhotoByContactId(id);
+		 	List<Photo> photos=photoService.findPhotoByContactId(id);
 	        List<PhotoDTO>photosDTO=new ArrayList<>();
 	       
 	        if(photos == null)

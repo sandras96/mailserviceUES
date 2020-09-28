@@ -2,7 +2,7 @@ var currentUserId = "";
 var loggedInUsername = "";
 var currentUserType = "";
 var token = "";
-var moviesDiv = $('#moviesDiv');
+
 $(document).ready(function() {
 	currentUserId = sessionStorage.getItem("id");
 	loggedInUsername = sessionStorage.getItem("username");
@@ -25,37 +25,6 @@ function loadContacts(userId){
 		cache: false,
 		success: function(response){
 			initContacts(response);
-			/*for(var i=0; i<response.length; i++){
-				contact = response[i];
-				contactId = contact.id;
-				console.log("contacttt" + response)
-		//		getAllPhotos(contactId);
-				var usersDiv = $("#usersDiv1");
-						
-						var tableRow= $('<tr></tr>');
-						var img = $('<td><div><button type="button" class="btn btn-link btn-lg" data-toggle="modal" data-target="#showPicturesModal">'
-								+'<span class="glyphicon glyphicon-user" style="color: black" value="'+contactId+'" onClick="showPicturesModal('+contactId+')"></span><span style="color: black"></span>'
-							+'</button></div></td>');
-						var displayName = $('<td>'+contact.displayName+'</td>');
-						var firstname = $('<td>'+contact.firstname+'</td>');
-						var lastname = $('<td>'+contact.lastname+'</td>');
-						var email = $('<td>'+contact.email+'</td>');
-						var note = $('<td>'+contact.text+'</td>');
-						var btnRemove= $('<td><button type="button" onClick="deleteContact('+contactId+')" class="removeUser btn btn-xs" value="'+contactId+'"><span class="glyphicon glyphicon-remove"></span></button></td>')
-						var btnEdit= $('<td><button type="button" data-toggle="modal" data-target="#editUserModal" onClick="editContactModal('+contactId+')" class="editUser btn btn-xs"><span class="glyphicon glyphicon-pencil"></span></button></td>')
-						
-						tableRow.append(img);
-						tableRow.append(displayName);
-							tableRow.append(firstname);
-							tableRow.append(lastname);
-							tableRow.append(email);
-							tableRow.append(note);
-							tableRow.append(btnEdit);
-							tableRow.append(btnRemove);
-							usersDiv.append(tableRow);
-							
-							
-						}*/
 						
 					},
 					error: function (jqXHR, textStatus, errorThrown) {  

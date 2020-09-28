@@ -3,21 +3,17 @@ package com.myproject.mailservice.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.myproject.mailservice.dto.AttachmentDTO;
 import com.myproject.mailservice.entity.Attachment;
 import com.myproject.mailservice.repository.AttachmentRepository;
 
+@Service
 public class AttachmentService implements AttachmentInterface {
 
 	@Autowired
 	AttachmentRepository attachmentRepository;
-	
-	/*
-	 * @Autowired DTOtoAttachment toAttachment;
-	 * 
-	 * @Autowired AttachmentToDTO toDto;
-	 */
 	
 	@Override
 	public List<Attachment> getAllByMessageId(Long id){

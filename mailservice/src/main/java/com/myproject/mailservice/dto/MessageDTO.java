@@ -12,7 +12,6 @@ import com.myproject.mailservice.entity.Contact;
 import com.myproject.mailservice.entity.Message;
 import com.myproject.mailservice.entity.Tag;
 
-@Document(indexName = "messagesDto")
 public class MessageDTO implements Serializable {
 
 	/**
@@ -61,18 +60,11 @@ public class MessageDTO implements Serializable {
 				m.getBcc(), new AccountDTO(m.getAccount()), new FolderDTO(), m.isUnread(), getTagsDTO(m.getTags()));
 	}
 	
-	
-	
-	
-	
-	
-	
 	public MessageDTO(Long id, String from, String to, Timestamp dateTime, String subject, String content,
 			String cc, String bcc, AccountDTO accountDTO, FolderDTO folderDTO, boolean unread,
 			ArrayList<TagDTO> tagsDTO) {
-		this.id = id;
 		
-
+		this.id = id;
 		this.from = from;
 		this.to = to;
 		this.cc = cc;
@@ -160,6 +152,12 @@ public class MessageDTO implements Serializable {
 				ret.add(null);
 		}
 		return ret;
+	}
+	@Override
+	public String toString() {
+		return "MessageDTO [id=" + id + ", account=" + account + ", folder=" + folder + ", from=" + from + ", to=" + to
+				+ ", cc=" + cc + ", bcc=" + bcc + ", dateTime=" + dateTime + ", subject=" + subject + ", content="
+				+ content + ", unread=" + unread + ", tags=" + tags + "]";
 	}
 	
 	

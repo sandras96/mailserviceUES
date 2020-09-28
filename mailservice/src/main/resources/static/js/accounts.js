@@ -165,7 +165,7 @@ function appendMessage(message){
 	var token = localStorage.getItem("token");
 	var div1 = $('<div class="chat_list active_chat" value='+message.id+'><div class="chat_people">'+
                '<div class="chat_img"  value='+message.id+'> <img src="/img/emailicon.jpg" alt="sunil" id="img'+message.id+'" value='+message.id+'></div>'+
-               ' <div class="chat_ib"><h5 class="inner"id="subject">Subject: '+message.subject+'<span class="chat_date" id="datetime">'+message.dateTime+'</span></h5>'+
+               ' <div class="chat_ib"><h5 class="inner"id="subject">Subject: '+message.subject+'<span class="chat_date" id="datetime">'+formatDate(new Date(message.dateTime))+'</span></h5>'+
                '<p class="inner"><span id="from" >from: '+message.from+' </span></p><p id="content" class="inner">'+message.content+'</p></div></div></div>'  );
 	
 	div1.appendTo($('.inbox_chat'));
@@ -183,7 +183,7 @@ function appendMessage(message){
 				success: function(response){
 					console.log("horaaaaj" + response.subject)
 					var div2 = $('<div class="incoming_msg_img"> <img src="img/profile.jpg" alt="sunil"> </div><div class="received_msg">'+
-							'<div class="received_withd_msg"><span class="time_date">'+response.dateTime+'<button style="float: right" type="button" onClick="deleteMessage('+imageId+')" class="removeUser btn btn-xs"><span class="glyphicon glyphicon-remove btn-danger"></span></button></span>'+
+							'<div class="received_withd_msg"><span class="time_date">'+formatDate(new Date(response.dateTime))+'<button style="float: right" type="button" onClick="deleteMessage('+imageId+')" class="removeUser btn btn-xs"><span class="glyphicon glyphicon-remove btn-danger"></span></button></span>'+
 							' <p>from: '+response.from+'</p>'+
 							'<p>to: '+response.to+'</p>'+
 							' <p>subject: '+response.subject+'</p>'+
@@ -219,36 +219,9 @@ function getAttachment(messageId){
 		success: function(response){
 			if(response.length != 0){
 				for(var i=0; i<response.length; i++){
-					attachment = response[i];
-					attachmentId = attachment.id;
-					var div3 = $('<div id="attachment" style="float:right; margin-right:15px"><a href="'+attachment.path+'"download="" id="'+attachmentId+'" class="h"><img src="img/paperclip3_black.png" style="width:30px; height:30px"/>'+attachment.name+'</a></div>');
-					div3.appendTo($('.incoming_msg'));
-				
-					
-					$(".h").click(function(){
-						console.log("clickclick" + attachment.mime)
-						var filename = attachment.name;
-						$.ajax({
-							type: "POST",
-							url: "https://localhost:8080/mailservice/attachments/download1/" + filename,
-							headers:{Authorization:"Bearer " + token},
-							contentType: 'application/json',
-							success: function (data) {
-							//	console.log(data)
-						//		window.open(data.resource);
-						//		window.location.href = data.resource
-								console.log("YaY");
-									},
-							error: function (jqXHR, textStatus, errorThrown) {
-        	
-								alert(jqXHR+ textStatus+ errorThrown);
-
-							}
-					});
-						
-				});
+					appendAttachment(response[i]);
+				}
 			}
-		}
 		},
 		error: function (jqXHR, textStatus, errorThrown) {  
 			if(jqXHR.status=="404"){
@@ -257,13 +230,86 @@ function getAttachment(messageId){
 		}
 	});
 }
+function appendAttachment(attachment){
+	var div3 = $('<div id="attachment" style="float:right; margin-right:15px"><a id="downloadBtn" onclick="getAtt('+attachment.id+')" class="h" href="'+attachment.name+'"download=""><img src="img/paperclip3_black.png" style="width:30px; height:30px"/>'+attachment.name+'</a></div>');
+	div3.appendTo($('.incoming_msg'));
+	
+	
+}
 
+function getAtt(id){
+	var token = localStorage.getItem("token");
+	$.ajax({
+		type: "GET",
+		url: "https://localhost:8080/mailservice/attachments/" + id,
+		headers:{Authorization:"Bearer " + token},
+		contentType: 'application/json',
+		success: function (response) {
+			console.log(response)
+		//	console.log(data)
+	//		window.open(data.resource);
+	//		window.location.href = data.resource
+			console.log("YaY");
+			var filename = response.name;
+			var token = localStorage.getItem("token");
+			$.ajax({
+				type: "POST",
+				url: "https://localhost:8080/mailservice/attachments/download1/" + filename,
+				headers:{Authorization:"Bearer " + token},
+				contentType: 'application/json',
+				success: function (data) {
+				//	console.log(data)
+			//		window.open(data.resource);
+			//		window.location.href = data.resource
+					console.log("YaYyyy" + filename);
+						},
+				error: function (jqXHR, textStatus, errorThrown) {
+
+					alert(jqXHR+ textStatus+ errorThrown);
+
+				}
+		});
+			
+				},
+		error: function (jqXHR, textStatus, errorThrown) {
+
+			alert(jqXHR+ textStatus+ errorThrown);
+
+		}
+});
+	
+}
+
+function downloadBre(id){
+	console.log("aaaaaaaaaaa")
+		var token = localStorage.getItem("token");
+		console.log("filenameee"+ filename)
+		$.ajax({
+			type: "POST",
+			url: "https://localhost:8080/mailservice/attachments/download1/" + filename,
+			headers:{Authorization:"Bearer " + token},
+			contentType: 'application/json',
+			success: function (data) {
+			//	console.log(data)
+		//		window.open(data.resource);
+		//		window.location.href = data.resource
+				console.log("YaY");
+					},
+			error: function (jqXHR, textStatus, errorThrown) {
+
+				alert(jqXHR+ textStatus+ errorThrown);
+
+			}
+	});
+		
+}
 function searchica(){
 	console.log("srcicaaa")
 	searchFunction();
 }
 
 function getAllmessagesByAccountId(){
+	console.log("srccAccount")
 	var token = localStorage.getItem("token");
 	var accountId = $('#selAccounts').find(":selected").val();
 	$("#sortByMessages").hide();
@@ -271,7 +317,7 @@ function getAllmessagesByAccountId(){
 	$(".searchAndSelect").show();
 	$.ajax({
 		type: 'get',
-		url: "https://localhost:8080/elasticsearch/search-messages/" + accountId,
+		url: "https://localhost:8080/mailservice/messages/account/" + accountId,
 		headers:{Authorization:"Bearer " + token},
 		cache: false,
 		contentType: 'application/json',

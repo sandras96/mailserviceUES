@@ -12,7 +12,7 @@ public interface MessageRepositoryElasticSearch extends ElasticsearchRepository<
 	List<Message> findBySubjectContainingAndAccountId(String subject, Long id);
 	List<Message> findByFromContainingAndAccountId(String from, Long id);
 	List<Message> findByContentContainingAndAccountId(String text, Long id);
-	
+	List<Message> findByAccountId(Long id);
 	List<Message> findByAccountOrderBySubjectAsc(Long id);
 	List<Message> findByAccountOrderByFromDesc(Long id);
 	List<Message> findByAccountOrderByDateTimeDesc(Long id);

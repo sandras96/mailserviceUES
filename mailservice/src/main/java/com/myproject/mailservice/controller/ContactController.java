@@ -25,10 +25,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.HttpHeaders;
 import com.myproject.mailservice.dto.ContactDTO;
 import com.myproject.mailservice.dto.PhotoDTO;
+import com.myproject.mailservice.dto.TagDTO;
+import com.myproject.mailservice.elasticsearch.repository.ContactRepositoryElasticSearch;
 import com.myproject.mailservice.entity.Contact;
 import com.myproject.mailservice.entity.Photo;
+import com.myproject.mailservice.entity.Tag;
 import com.myproject.mailservice.repository.PhotoRepository;
 import com.myproject.mailservice.service.ContactInterface;
+import com.myproject.mailservice.service.PhotoInterface;
 import com.myproject.mailservice.service.UserInterface;
 
 @RestController
@@ -43,11 +47,23 @@ public class ContactController {
 	private UserInterface userService;
 	
 	@Autowired
-	PhotoRepository photoRepository;
+	private PhotoInterface photoService;
+	
+	@Autowired(required=true)
+	private ContactRepositoryElasticSearch contactRepo;
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	
+	@GetMapping(value= "/getAll")
+	public ResponseEntity<List<ContactDTO>>getAllContacts(){
+		logger.info("GET Method, request for all contacts.");
+        List<Contact> contacts = contactService.getAll();
+        List<ContactDTO> contactsDTO = new ArrayList<>();
+        for (Contact c: contacts)
+            contactsDTO.add(new ContactDTO(c));
+
+        return new ResponseEntity<List<ContactDTO>>(contactsDTO,HttpStatus.OK);
+    }
 	@GetMapping(value="/{id}")
 		public ResponseEntity<ContactDTO> getContactById(@PathVariable("id")Long id){
 			logger.info("GET request for contact with id: " + id);
@@ -142,6 +158,7 @@ public class ContactController {
 				return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 			}else {
 				contactService.delete(id);
+			//	contactRepo.deleteById(Integer.valueOf(id.intValue()));
 				return new ResponseEntity<Void>(HttpStatus.OK);
 			}
 		}
@@ -150,23 +167,13 @@ public class ContactController {
 	    public Photo uploadImage(@RequestParam("id") Long id,@RequestParam("photo") MultipartFile photo) throws Exception{
 		 	logger.info("POST Method, upload photo for contact with id: "+id+".");   
 		 	System.out.println("id je SLIKE" + id);
-	     //   Photo uploadedPhoto = new Photo(photo.getOriginalFilename(), photo.getInputStream().toString(), photo.getBytes(), contactService.getOne(id));
-	   //     String url = "http://localhost:8080/test/" + photo.getOriginalFilename();
-	   //     HttpHeaders headers = new HttpHeaders();
-	  //      headers.setLocation(URI.create(url));
-	 //       Photo uploadedPhoto = new Photo(photo.getOriginalFilename(), url, photo.getBytes(), contactService.getOne(id));
-	//        System.out.println("uploaded photo je " + uploadedPhoto + "path je " + photo.getInputStream().toString() + "urllll je " + url);
-	//        photoRepository.save(uploadedPhoto);
-	        
-		 	
-	    //    return new ResponseEntity<>(headers, HttpStatus.CREATED);
 	        
 		 	File file = convert(photo);
-		 	String path =file.getAbsolutePath(); //getAbsolutePath()
+		 	String path =file.getAbsolutePath(); 
 		 	System.out.println("pathhh je " + path);
 		 	Photo uploadedPhoto = new Photo(photo.getOriginalFilename(), path, photo.getBytes(), contactService.getOne(id));
 		 	System.out.println("uploadddd " + uploadedPhoto);
-		 	return photoRepository.save(uploadedPhoto);
+		 	return photoService.save(uploadedPhoto);
 	    }
 	 	public File convert(MultipartFile file) throws IOException{
 		 	  File convFile = new File(file.getOriginalFilename());

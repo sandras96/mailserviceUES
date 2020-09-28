@@ -13,6 +13,7 @@ public interface MessageInterface {
 	Message save(Message Message);
 	Message edit(MessageDTO Message,Long id);
 	void delete(Long id);
+	List<Message> findAll();
 	List<Message> findMessagesByAccountId(Long id);
 	List<Message> findBySubject(Long id);
 	List<Message> findBySender(Long id);

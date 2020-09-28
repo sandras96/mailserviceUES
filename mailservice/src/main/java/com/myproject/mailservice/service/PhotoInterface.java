@@ -14,5 +14,5 @@ public interface PhotoInterface {
 	void delete(Long id);
 	Photo edit(PhotoDTO photo,Long id);
 	//Photo getByDisplayName(String displayName);
-	List<Photo> findPhotoByUserId(Long id);
+	List<Photo> findPhotoByContactId(Long id);
 }

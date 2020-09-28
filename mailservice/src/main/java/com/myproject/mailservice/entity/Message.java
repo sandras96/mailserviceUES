@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity(name = "Message")
 @Table(name = "message")
-@Document(indexName = Message.INDEX_NAME, type = Message.TYPE_NAME, shards = 1, replicas = 0)
+@Document(indexName = "messagesss1",shards = 1, replicas = 0 )
 public class Message implements Serializable{
 	
 	/**
@@ -37,8 +37,8 @@ public class Message implements Serializable{
 	
 	
 	
-	public static final String INDEX_NAME = "messagesss1";
-	public static final String TYPE_NAME = "message";
+	public static final String INDEX_NAME = "messagesss1111";
+	public static final String TYPE_NAME = "message11";
 	
 	public static final String DATE_PATTERN = "yyyy-MM-dd";
 //	public static final String analyzer = "{\"tokenizer\" : \"standard\",\"filter\" : [\"lowercase\"]}";
@@ -167,29 +167,7 @@ public class Message implements Serializable{
 
 
 
-	/*
-	 * public Message(String description, String text, Address[] from, String
-	 * subject, Date sentDate, Account account) { super(); Timestamp ts = new
-	 * Timestamp(sentDate.getTime()); this.from = from.toString(); this.cc =
-	 * description; this.subject = subject; this.content = text; this.dateTime = ts;
-	 * this.to = "djapic.andrej@gmail.com"; this.account = account; }
-	 */
 
-
-
-
-
-
-	public void addTag(Tag tag) {
-		tags.add(tag);
-		tag.getMessages().add(this);
-	}
-	
-    public void removeTag(Tag tag) {
-        tags.remove(tag);
-        tag.getMessages().remove(this);
-    }
- 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

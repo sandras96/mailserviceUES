@@ -5,7 +5,7 @@ var token = "";
 
 $(document).ready(function(){
 	loginStatus();
-	$('.pass_show').append('<span class="ptxt">Show</span>');  
+	$('.pass_show').append('<span class="ptxt">Show</span>'); 
 });
 
 function loginStatus(){
@@ -16,6 +16,8 @@ function loginStatus(){
 	console.log("currentUserId: "+currentUserId);
 	console.log("currentUserType: " + currentUserType);
 	
+	$('#contactsAllButton').hide();
+	
 	if(currentUserId!= "null"){
 		console.log("currentUserId nije null")
 	$('#logoutButton').show();
@@ -25,6 +27,11 @@ function loginStatus(){
 	$("#mailsButton").show();
 	$('#loginButton').hide();
 	$('#registerButton').hide();
+	
+	if(currentUserType == "ADMIN"){
+		console.log("ADMINN")
+		$('#contactsAllButton').show();
+	}
 
 	}else{
 		console.log("currentUserId jeste null")
@@ -36,28 +43,10 @@ function loginStatus(){
 		$("#mailsButton").hide();
 		$('#contactsAllButton').hide();
 		$('#profileButton').hide();
+		
+		
 		}
 	}
-/*function getAllMessages(){
-	console.log("getAllMessages")
-	var token = localStorage.getItem("token");
-	$.ajax({
-		type: 'get',
-		url: "https://localhost:8080/elasticsearch/search-messages/",
-		headers:{Authorization:"Bearer " + token},
-		dataType: 'json',
-		cache: false,
-		success: function(response){
-			 console.log("PORUKEEE" + response.length)
-			
-		},
-		error: function (jqXHR, textStatus, errorThrown) {  
-			if(jqXHR.status=="404"){
-				alert(textStatus, errorThrown);
-			}
-		}
-	});
-}*/
 
 function loginAuth(){
 	var username =  $('#inputUsername').val().trim();
@@ -178,7 +167,10 @@ function showMyProfile(){
 			$("#editFirstname").attr('placeholder', response.firstname);
 			$("#editLastname").attr('placeholder', response.lastname);
 			$('#roleSelectEdit').val(response.authority);
-			
+			if(currentUserType == "USER"){
+				$('select[name="select-states"]').attr('disabled', 'disabled');
+			}
+				
 		},
 		error: function (jqXHR, textStatus, errorThrown) {  
 			alert(jqXHR.status);
@@ -213,8 +205,8 @@ function editUser(){
 		success: function(response){
 			console.log(response)
 			alert("Success")
+			sessionStorage.setItem("userRole", response.authority);
 			location.reload();
-			
 		},
 		error: function (jqXHR, textStatus, errorThrown) {  
 			alert(jqXHR.status);
@@ -259,6 +251,23 @@ function changePassword(){
 }
 
   
+function formatDate(tempDate) {
+	var date = new Date(tempDate);
+	var monthNames = [
+	  "January", "February", "March",
+	  "April", "May", "June", "July",
+	  "August", "September", "October",
+	  "November", "December"
+	];
+
+	var day = date.getDate();
+	var monthIndex = date.getMonth();
+	var year = date.getFullYear();
+
+	return day + '. ' + monthNames[monthIndex] + ' of ' + year+'.';
+	//return day + '. ' + parseInt(monthIndex+1) + '. ' + year+'.';
+}
+
 
 $(document).on('click','.pass_show .ptxt', function(){ 
 

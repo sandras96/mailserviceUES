@@ -48,6 +48,9 @@ import com.myproject.mailservice.repository.AccountRepository;
 import com.myproject.mailservice.repository.ContactRepository;
 import com.myproject.mailservice.repository.MessageRepository;
 import com.myproject.mailservice.repository.UserRepository;
+import com.myproject.mailservice.service.AccountInterface;
+import com.myproject.mailservice.service.ContactInterface;
+import com.myproject.mailservice.service.MessageInterface;
 
 @RestController
 @RequestMapping(value = "/elasticsearch")
@@ -58,22 +61,20 @@ public class SearchController {
 	private ContactRepositoryElasticSearch contactRepo;
 	
 	@Autowired
-	private ContactRepository contactRepository;
+	private ContactInterface contactRepository;
 	
 	@Autowired(required=true)
 	private MessageRepositoryElasticSearch messageRepo;
 	
 	@Autowired
-	private MessageRepository messageRepository;
+	private MessageInterface messageRepository;
 
 	@Autowired
-	private AccountRepository accountRepository;
+	private AccountInterface accountRepository;
 	
 	@Autowired
 	private GeneralSearchService generalSearchService;
 
-	@Autowired
-	private UserRepository userService;
 
 	@Autowired
 	private com.myproject.mailservice.elasticsearch.search.ResultRetriever resultRetriever;
@@ -83,7 +84,8 @@ public class SearchController {
 	@GetMapping(value = "/search/contactFuzzy/{fuzzy}")
 	public Iterable<ContactDTO> searchFuzzyContact(@PathVariable("fuzzy") String fuzzyQuery) throws Exception {
 		System.out.println("CONTACTS serach fuzzy ---------------" + fuzzyQuery);
-		for (Contact c : contactRepository.findAll()) {
+		contactRepo.deleteAll();
+		for (Contact c : contactRepository.getAll()) {
 			contactRepo.save(c);
 		}
 
@@ -100,7 +102,8 @@ public class SearchController {
 	@GetMapping(value = "/search/contactPhrase/{phrase}") 
 	public Iterable<ContactDTO> searchByPhrase(@PathVariable("phrase") String phraseQuery) throws Exception {
 		System.out.println("CONTACTS serach by phrase --------------- " + phraseQuery);
-		for (Contact c : contactRepository.findAll()) {
+		contactRepo.deleteAll();
+		for (Contact c : contactRepository.getAll()) {
 			contactRepo.save(c);
 		}
 
@@ -118,7 +121,8 @@ public class SearchController {
 	@GetMapping(value="/search/searchByFirstName/{firstName}/{userId}")
 	public Iterable<ContactDTO> searchByFirstName(@PathVariable("firstName") String firstName, @PathVariable("userId") Long id) throws Exception {
 		System.out.println("CONTACTS serach by first name ---------------" + firstName + "------for user with id: " + id);
-		for(Contact c : contactRepository.findAll()) {
+		contactRepo.deleteAll();
+		for(Contact c : contactRepository.getAll()) {
 			contactRepo.save(c);
 		}
 		List<ContactDTO> cDTO = new ArrayList<ContactDTO>();	
@@ -133,7 +137,8 @@ public class SearchController {
 	@GetMapping(value="/search/searchByLastName/{lastName}/{userId}")
 	public Iterable<ContactDTO> searchByLastName(@PathVariable("lastName") String lastName, @PathVariable("userId") Long id) throws Exception {
 		System.out.println("CONTACTS serach by Last name ---------------" + lastName + "------for user with id: " + id);
-		for(Contact c : contactRepository.findAll()) {
+		contactRepo.deleteAll();
+		for(Contact c : contactRepository.getAll()) {
 			contactRepo.save(c);
 		}
 		List<ContactDTO> cDTO = new ArrayList<ContactDTO>();	
@@ -148,7 +153,8 @@ public class SearchController {
 	@GetMapping(value="/search/searchByNote/{note}/{userId}")
 	public Iterable<ContactDTO> searchByNote(@PathVariable("note") String note, @PathVariable("userId") Long id) throws Exception {
 		System.out.println("CONTACTS serach by NOTE ---------------" + note + "------for user with id: " + id);
-		for(Contact c : contactRepository.findAll()) {
+		contactRepo.deleteAll();
+		for(Contact c : contactRepository.getAll()) {
 			contactRepo.save(c);
 		}
 		
@@ -163,20 +169,9 @@ public class SearchController {
 		return cDTO;
 	}
 
-
-	@GetMapping(value = "/search-contacts")
-	public List<Contact> searchContacts(@RequestParam(required = false) String query) {
-		if (query == null || query.equals("")) {
-			return contactRepository.findAll();
-		}
-
-		return generalSearchService.searchContacts(query);
-	}
-
 	@PostMapping(value = "/search/contactBool")
-	public ResponseEntity<List<ResultData>> searchByBoolAnd(@RequestBody AdvancedQuery advancedQuery)
-			throws Exception {
-		for (Contact c : contactRepository.findAll()) {
+	public ResponseEntity<List<ResultData>> searchByBoolAnd(@RequestBody AdvancedQuery advancedQuery)throws Exception {
+		for (Contact c : contactRepository.getAll()) {
 			contactRepo.save(c);
 		}
 		org.elasticsearch.index.query.QueryBuilder query1 = QueryBuilder.buildQuery(SearchType.regular, advancedQuery.getField1(),
@@ -268,29 +263,26 @@ public class SearchController {
 
 //-------------------------PORUKE---------------------------------------------
 
-	@GetMapping(value = "/search-messages/{id}")
-	public Iterable<Message> searchMessages(@RequestParam(required = false) String query, @PathVariable("id") Long id) {
-		if (query == null || query.equals("")) {
-			return messageRepository.findMessagesByAccountId(id);
-				
-		}
-		return messageRepo.findAll();
-//		return generalSearchService.searchMessages(query);
-		
-		}
-	
+	/*
+	 * @GetMapping(value = "/search-messages/{id}") public Iterable<Message>
+	 * searchMessages(@RequestParam(required = false) String
+	 * query, @PathVariable("id") Long id) { if (query == null || query.equals(""))
+	 * { return messageRepo.findByAccountId(id);
+	 * 
+	 * } // return messageRepo.findAll(); return
+	 * generalSearchService.searchMessages(query);
+	 * 
+	 * }
+	 */
 	
 	 @GetMapping(value = "/search/searchBySubject/{id}/{subject}") 
 	  public Iterable<MessageDTO> searchBySubject(@PathVariable("id") Long id, @PathVariable("subject") String subject) throws Exception {
 		  System.out.println("MAILS serach by SUBJECT ---------------" + subject + "id: " + id);
-	  
-			/*
-			 * List<Message> messages = messageRepository.findMessagesByAccountId(id);
-			 * System.out.println("Messages lista jeee" + messages); for(Message m :
-			 * messageRepository.findMessagesByAccountId(id)) {
-			 * 
-			 * messageRepo.save(m); }
-			 */
+		  messageRepo.deleteAll();
+		  for(Message m : messageRepository.findAll()) {
+				  	messageRepo.save(m); 
+				  	}
+			 
 		  
 		  List<MessageDTO> messagesDTO = new ArrayList<MessageDTO>();
 		  List<Message> messages1 = messageRepo.findBySubjectContainingAndAccountId(CyirilLatinConverter.cir2lat(subject), id);
@@ -306,14 +298,11 @@ public class SearchController {
 	 @GetMapping(value="/search/searchBySender/{id}/{from}")
 	   public Iterable<MessageDTO> searchByFromAndTo(@PathVariable("id") Long id, @PathVariable("from") String from) throws Exception {
 		  System.out.println("MAILS serach by SENDER ---------------" + from + "id: " + id);
+		  messageRepo.deleteAll();
+		  for(Message m : messageRepository.findAll()) {
+			  	messageRepo.save(m); 
+			  	}
 		  
-			/*
-			 * List<Message> messages = messageRepository.findMessagesByAccountId(id);
-			 * System.out.println("Messages lista jeee" + messages); for(Message m :
-			 * messageRepository.findMessagesByAccountId(id)) {
-			 * 
-			 * messageRepo.save(m); }
-			 */
 		  List<MessageDTO> messagesDTO = new ArrayList<MessageDTO>();
 		  List<Message> messages1 = messageRepo.findByFromContainingAndAccountId(CyirilLatinConverter.cir2lat(from), id);
 	  
@@ -328,14 +317,11 @@ public class SearchController {
 	 @GetMapping(value="/search/searchByContent/{id}/{content}")
 		public Iterable<MessageDTO> searchByContent(@PathVariable("id") Long id, @PathVariable("content") String content) throws Exception {
 			System.out.println("MAILS serach by CONTENT ---------------" + content);
-			/*
-			 * content = "%"+content+"%"; List<Message> messages =
-			 * messageRepository.findMessagesByAccountId(id);
-			 * System.out.println("Messages lista jeee" + messages); for(Message m :
-			 * messageRepository.findMessagesByAccountId(id)) {
-			 * 
-			 * messageRepo.save(m); }
-			 */
+			 messageRepo.deleteAll();
+			for(Message m : messageRepository.findAll()) {
+			  	messageRepo.save(m); 
+			  	}
+			
 			 List<MessageDTO> messagesDTO = new ArrayList<MessageDTO>();
 			 List<Message> messages1 = messageRepo.findByContentContainingAndAccountId(CyirilLatinConverter.cir2lat(content), id);
 			 for(Message m: messages1) { 
@@ -357,79 +343,7 @@ public class SearchController {
 		 */
 
 }
-//-------------------------PORUKE BY USER---------------------------------------------
 
-/*	@GetMapping(value = "/search-messages")
-	public List<Message> searchMessagesALL(@RequestParam(required = false) String query) {
-		System.out.println("SEARCH MESSAGES BY USER");
-		if (query == null || query.equals("")) {
-			return messageRepository.findAll();
-				
-		}
-//		return messageRepo.findAll();
-		return generalSearchService.searchMessages(query);
-		
-		}
-	@GetMapping(value = "/search-messages/{id}")
-	public List<Message> searchMessages(@RequestParam(required = false) String query, @PathVariable("id") Long id) {
-		System.out.println("SEARCH MESSAGES BY USER");
-		if (query == null || query.equals("")) {
-			return messageRepository.findMessagesByEuserId(id);
-				
-		}
-//		return messageRepo.findAll();
-		return generalSearchService.searchMessages(query);
-		
-		}
-	
-	 @GetMapping(value = "/search/searchBySubject/{id}/{subject}") 
-	  public Iterable<MessageDTO> searchBySubject(@PathVariable("id") Long id, @PathVariable("subject") String subject) throws Exception {
-		  System.out.println("MAILS serach by SUBJECT ---------------" + subject + "id: " + id);
-		  List<Message> messages = messageRepository.findMessagesByEuserId(id);
-		  System.out.println("Messages lista jeee" + messages); 
-		  for(Message m : messageRepository.findMessagesByEuserId(id)) {
-			
-			  messageRepo.save(m);
-		  	} 
-		  
-		  List<MessageDTO> messagesDTO = new ArrayList<MessageDTO>();
-		  List<Message> messages1 = messageRepo.findBySubjectContaining(CyirilLatinConverter.cir2lat(subject.trim()));
-	  
-		  for(Message m: messages1) { 
-			  	Long accountId = accountRepository.findByMessageId(m.getId());
-			  	m.setAccount(accountRepository.getOne(accountId));
-			  	MessageDTO messageDTO = new MessageDTO(m);
-			  	messagesDTO.add(messageDTO);
-		  			} 
-		  		return messagesDTO;
-	 }
-	
-	
-	
-	 @GetMapping(value="/search/searchBySender/{id}/{from}")
-	   public Iterable<MessageDTO> searchByFromAndTo(@PathVariable("id") Long id, @PathVariable("from") String from) throws Exception {
-		  System.out.println("MAILS serach by SENDER ---------------" + from + "id: " + id);
-		  
-		  List<Message> messages = messageRepository.findMessagesByEuserId(id);
-		  System.out.println("Messages lista jeee" + messages); 
-		  for(Message m : messageRepository.findMessagesByEuserId(id)) {
-			
-			  messageRepo.save(m);
-		  	} 
-		  List<MessageDTO> messagesDTO = new ArrayList<MessageDTO>();
-		  List<Message> messages1 = messageRepo.findByFromContaining(CyirilLatinConverter.cir2lat(from));
-	  
-		  for(Message m: messages1) { 
-			 	Long accountId = accountRepository.findByMessageId(m.getId());
-			  	m.setAccount(accountRepository.getOne(accountId));
-			  	MessageDTO messageDTO = new MessageDTO(m);
-			  	messagesDTO.add(messageDTO);
-		  			} 
-		  		return messagesDTO;
-	   }*/
-	
-	
-	
 	
 	
 	

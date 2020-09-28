@@ -28,9 +28,10 @@ public class AccountDTO implements Serializable {
 	private String username;
 	private String password;
 	private String displayName;
-	
+	private List<MessageDTO> messages;
 	
 
+	
 	
 	public AccountDTO() {
 		super();
@@ -135,6 +136,11 @@ public class AccountDTO implements Serializable {
 	public void setInServerType(int inServerType) {
 		this.inServerType = inServerType;
 	}
-	
+	public List<MessageDTO> getMessages() {
+		return messages;
+	}
+	public void setMessages(List<MessageDTO> messages) {
+		this.messages = messages;
+	}
 	
 }

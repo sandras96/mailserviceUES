@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity(name = "Attachment")
 @Table(name = "attachment")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-@Document(indexName = "attachments")
 public class Attachment {
 	
 	

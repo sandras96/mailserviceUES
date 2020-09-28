@@ -49,15 +49,17 @@ public class PhotoService implements PhotoInterface {
 	}
 
 	
-	@Override
-	public List<Photo> findPhotoByUserId(Long id) {
-		return photoRepository.findPhotoByContactId(id);
-	}
 
 	@Override
 	public Photo edit(PhotoDTO photo, Long id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<Photo> findPhotoByContactId(Long id) {
+		// TODO Auto-generated method stub
+		return photoRepository.findPhotoByContactId(id);
 	}
 	
 	

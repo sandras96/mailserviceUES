@@ -92,6 +92,12 @@ public class MessageService implements MessageInterface{
 		return messageRepository.findByTags_IdAndEuserId(tagId, userId);
 	}
 
+	@Override
+	public List<Message> findAll() {
+		// TODO Auto-generated method stub
+		return messageRepository.findAll();
+	}
+
 
 
 
