@@ -218,8 +218,37 @@ function getAttachment(messageId){
 		contentType: 'application/json',
 		success: function(response){
 			if(response.length != 0){
+				
 				for(var i=0; i<response.length; i++){
-					appendAttachment(response[i]);
+					attachment = response[i];
+					attachmentId = attachment.id;
+					filename = attachment.name;
+					var div3 = $('<div id="attachment" style="float:right; margin-right:15px"><a href="'+attachment.path+'"download="" id="'+attachmentId+'" class="h"><img src="img/paperclip3_black.png" style="width:30px; height:30px"/>'+attachment.name+'</a></div>');
+					div3.appendTo($('.incoming_msg'));
+					
+
+					$(".h").click(function(){
+						var text = $(this).text();
+						console.log("texttt je " + text)
+						$.ajax({
+							type: "POST",
+							url: "https://localhost:8080/mailservice/attachments/download1/" + text,
+							headers:{Authorization:"Bearer " + token},
+							contentType: 'application/json',
+							success: function (data) {
+							//	console.log(data)
+						//		window.open(data.resource);
+						//		window.location.href = data.resource
+								console.log("YaY");
+									},
+							error: function (jqXHR, textStatus, errorThrown) {
+
+								alert(jqXHR+ textStatus+ errorThrown);
+
+							}
+					});
+
+				});
 				}
 			}
 		},

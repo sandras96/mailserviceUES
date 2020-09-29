@@ -2,7 +2,6 @@ package com.myproject.mailservice.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -11,7 +10,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +24,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,12 +32,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.myproject.mailservice.dto.AccountDTO;
 import com.myproject.mailservice.dto.AttachmentDTO;
-import com.myproject.mailservice.entity.Account;
 import com.myproject.mailservice.entity.Attachment;
 import com.myproject.mailservice.repository.AttachmentRepository;
-import com.myproject.mailservice.service.AttachmentInterface;
 import com.myproject.mailservice.util.MediaTypeUtils;
 
 @RestController
@@ -48,7 +42,7 @@ import com.myproject.mailservice.util.MediaTypeUtils;
 public class AttachmentController {
 	
 	@Autowired
-	private AttachmentInterface attachmentInterface;
+	private AttachmentRepository attachmentService;
 	
 	@Autowired
 	private ServletContext servletContext;
@@ -56,30 +50,11 @@ public class AttachmentController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	private static final String DIRECTORY = "C:\\Users\\Sandra\\Pictures\\mailService\\mailserviceUES\\mailservice\\src\\main\\resources\\static\\files";
-	private static final String DIRECTORY1 = "C:\\Users\\Sandra\\Downloads\\";
 	
-	private static String DATA_DIR_PATH;
-	
-	static {
-		ResourceBundle rb=ResourceBundle.getBundle("application");
-		DATA_DIR_PATH=rb.getString("dataDir");
-	}
-	
-	@GetMapping(value="/{id}")
-	public ResponseEntity<AttachmentDTO> getAttachmentById(@PathVariable("id")Long id){
-		logger.info("GET request for attachment with id: " + id);
-		Attachment attachment = attachmentInterface.getOne(id);
-		if(attachment == null) {
-			logger.error("Attachment with id: "+ id +" not found.");
-			return new ResponseEntity<AttachmentDTO>(HttpStatus.NOT_FOUND);
-		}else {
-			return new ResponseEntity<AttachmentDTO>(new AttachmentDTO(attachment), HttpStatus.OK);
-		}
-}
 	 @GetMapping(value = "/message/{id}")
 	    public ResponseEntity<List<AttachmentDTO>> getAttachmentsByMessage(@PathVariable("id") Long id){
 		 	logger.info("GET request for all attachments for message with id: " + id);
-		 	List<Attachment> attachments= attachmentInterface.getAllByMessageId(id);
+		 	List<Attachment> attachments= attachmentService.getByMessageId(id);
 	        List<AttachmentDTO>attachmentsDTO=new ArrayList<>();
 	        if(attachments == null)
 	            return new ResponseEntity<List<AttachmentDTO>>(HttpStatus.NOT_FOUND);
@@ -99,16 +74,15 @@ public class AttachmentController {
 	        System.out.println("fileName: " + fileName);
 	        System.out.println("mediaType: " + mediaType);
 	        HttpHeaders respHeaders = new HttpHeaders();
-         
+            
 	        File file = new File(DIRECTORY + "/" + fileName);
 	        respHeaders.setContentType(mediaType);
-	        respHeaders.setContentLength(file.length());
-	        respHeaders.setContentDispositionFormData("attachment", file.getName());
+            respHeaders.setContentLength(file.length());
+            respHeaders.setContentDispositionFormData("attachment", file.getName());
 	        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
 	 
 	        return new ResponseEntity<InputStreamResource>(resource, respHeaders, HttpStatus.OK);
 	    }
-	       
 	 
 
 }

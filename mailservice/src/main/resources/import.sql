@@ -30,14 +30,14 @@ insert into accounts (display_name, in_server_address, in_server_port, in_server
 insert into accounts (display_name, in_server_address, in_server_port, in_server_type, account_password, smtp_address, smtp_port, account_username, user_id) values ("boskic", "address", 1, 2,"boskic96", "address2", 1, "boske", 4);
 insert into accounts (display_name, in_server_address, in_server_port, in_server_type, account_password, smtp_address, smtp_port, account_username, user_id) values ("boskica", "sdaasdas", 15, 26,"boskica96", "adsdadadress2", 13, "boskica", 4);
 
-insert into message (bcc_message, cc_message, content, date_time, from_message, subject_mess, to_message, is_unread, account_id, folder_id) values ("bbc", "cc", "prvi mejl", '2018-12-12',"sandra", "prvi naslov", "sandra", true,1, null);
-insert into message (bcc_message, cc_message, content, date_time, from_message, subject_mess, to_message, is_unread, account_id, folder_id) values ("bbc", "cc", "drugi mejl", '2018-12-12',"nela", "drugi naslov", "sandra", true,1, null);
+insert into message (bcc_message, cc_message, content, date_time, from_message, subject_mess, to_message, is_unread, account_id, folder_id) values ("bbc", "cc", "prvi mejl", '2015-09-11',"sandra", "prvi naslov", "sandra", true,1, null);
+insert into message (bcc_message, cc_message, content, date_time, from_message, subject_mess, to_message, is_unread, account_id, folder_id) values ("bbc", "cc", "drugi mejl", '2018-08-12',"nela", "drugi naslov", "sandra", true,1, null);
 
-insert into message (bcc_message, cc_message, content, date_time, from_message, subject_mess, to_message, is_unread, account_id, folder_id) values ("bbc", "cc", "treci mejl", '2018-12-12',"kaja", "treci naslov", "sandra", true,2, null);
-insert into message (bcc_message, cc_message, content, date_time, from_message, subject_mess, to_message, is_unread, account_id, folder_id) values ("bbc", "cc", "cetvrti mejl", '2018-12-12',"kaca", "4 naslov", "sandra", true,2, null);
+insert into message (bcc_message, cc_message, content, date_time, from_message, subject_mess, to_message, is_unread, account_id, folder_id) values ("bbc", "cc", "treci mejl", '2017-10-10',"kaja", "treci naslov", "sandra", true,2, null);
+insert into message (bcc_message, cc_message, content, date_time, from_message, subject_mess, to_message, is_unread, account_id, folder_id) values ("bbc", "cc", "cetvrti mejl", '2016-07-09',"kaca", "4 naslov", "sandra", true,2, null);
 
-insert into message (bcc_message, cc_message, content, date_time, from_message, subject_mess, to_message, is_unread, account_id, folder_id) values ("bbc", "cc", "prvi mejl", '2018-12-12',"sandra", "hhh", "nela", true,3, null);
-insert into message (bcc_message, cc_message, content, date_time, from_message, subject_mess, to_message, is_unread, account_id, folder_id) values ("bbc", "cc", "drugi mejl", '2018-12-12',"nela", "phhh", "nela", true,3, null);
+insert into message (bcc_message, cc_message, content, date_time, from_message, subject_mess, to_message, is_unread, account_id, folder_id) values ("bbc", "cc", "prvi mejl", '2017-10-10',"sandra", "hhh", "nela", true,3, null);
+insert into message (bcc_message, cc_message, content, date_time, from_message, subject_mess, to_message, is_unread, account_id, folder_id) values ("bbc", "cc", "drugi mejl", '2016-07-09',"nela", "phhh", "nela", true,3, null);
 
 insert into message (bcc_message, cc_message, content, date_time, from_message, subject_mess, to_message, is_unread, account_id, folder_id) values ("bbc", "cc", "treci mejl", '2003-12-12',"kaja", "ss", "nela", true,4, null);
 insert into message (bcc_message, cc_message, content, date_time, from_message, subject_mess, to_message, is_unread, account_id, folder_id) values ("bbc", "cc", "cetvrti mejl", '2017-12-12',"kaca", "4 naslov", "nela", true,4, null);
